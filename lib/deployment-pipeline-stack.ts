@@ -15,6 +15,35 @@ const sourceConnectionArn =
   process.env.CODESTAR_CONNECTION_ARN ??
   'arn:aws:codeconnections:us-east-2:111111111111:connection/replace-me';
 
+const frontendStageEnv = [
+  'BACKEND_API_URL',
+  'RUNTIME_WS_URL',
+  'RUNTIME_ENDPOINT',
+  'RUNTIME_ARN',
+  'WORKFLOW_WS_URL',
+  'ALPHA_BACKEND_API_URL',
+  'ALPHA_RUNTIME_WS_URL',
+  'ALPHA_RUNTIME_ENDPOINT',
+  'ALPHA_RUNTIME_ARN',
+  'ALPHA_WORKFLOW_WS_URL',
+  'GAMMA_BACKEND_API_URL',
+  'GAMMA_RUNTIME_WS_URL',
+  'GAMMA_RUNTIME_ENDPOINT',
+  'GAMMA_RUNTIME_ARN',
+  'GAMMA_WORKFLOW_WS_URL',
+  'PROD_BACKEND_API_URL',
+  'PROD_RUNTIME_WS_URL',
+  'PROD_RUNTIME_ENDPOINT',
+  'PROD_RUNTIME_ARN',
+  'PROD_WORKFLOW_WS_URL',
+] as const;
+
+function configuredStageEnv(): Record<string, string> {
+  return Object.fromEntries(
+    frontendStageEnv.map((name) => [name, process.env[name] ?? '']),
+  );
+}
+
 export class DeploymentPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -43,6 +72,7 @@ export class DeploymentPipelineStack extends Stack {
           CODESTAR_CONNECTION_ARN: sourceConnectionArn,
           CDK_DEFAULT_ACCOUNT: Stack.of(this).account,
           CDK_DEFAULT_REGION: Stack.of(this).region,
+          ...configuredStageEnv(),
         },
         commands: ['npm ci', 'npm test', 'npm run synth'],
       }),
