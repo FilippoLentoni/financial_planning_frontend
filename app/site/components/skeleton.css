@@ -1,0 +1,695 @@
+/**
+ * Agentic Agents - Skeleton Loading Component
+ * 
+ * Sleek skeleton loading animations with futuristic design.
+ * Features: shimmer effects, pulse animations, and SVG-based loaders.
+ */
+
+/* ============================================================
+   CSS VARIABLES FOR SKELETON
+   ============================================================ */
+
+:root {
+    --skeleton-base: rgba(30, 30, 50, 0.8);
+    --skeleton-shine: rgba(255, 107, 43, 0.15);
+    --skeleton-pulse: rgba(255, 107, 43, 0.08);
+    --skeleton-border: rgba(255, 107, 43, 0.2);
+    --skeleton-radius: 8px;
+    --skeleton-animation-duration: 1.8s;
+}
+
+/* ============================================================
+   BASE SKELETON ELEMENT
+   ============================================================ */
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--skeleton-base);
+    border-radius: var(--skeleton-radius);
+    border: 1px solid var(--skeleton-border);
+}
+
+.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-shine) 20%,
+        var(--skeleton-shine) 40%,
+        transparent 100%
+    );
+    animation: skeleton-shimmer var(--skeleton-animation-duration) infinite linear;
+    transform: translateX(-100%);
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ============================================================
+   SKELETON SHAPES
+   ============================================================ */
+
+.skeleton-text {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-text:last-child {
+    margin-bottom: 0;
+}
+
+.skeleton-text-sm {
+    height: 10px;
+    width: 80%;
+}
+
+.skeleton-text-lg {
+    height: 18px;
+    width: 60%;
+}
+
+.skeleton-text-xl {
+    height: 24px;
+    width: 40%;
+}
+
+.skeleton-circle {
+    border-radius: 50%;
+}
+
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.skeleton-avatar-lg {
+    width: 56px;
+    height: 56px;
+}
+
+.skeleton-button {
+    height: 36px;
+    width: 100px;
+    border-radius: var(--skeleton-radius);
+}
+
+.skeleton-button-sm {
+    height: 28px;
+    width: 80px;
+}
+
+.skeleton-button-lg {
+    height: 44px;
+    width: 140px;
+}
+
+.skeleton-card {
+    padding: 16px;
+    background: var(--skeleton-base);
+    border-radius: 12px;
+    border: 1px solid var(--skeleton-border);
+}
+
+.skeleton-box {
+    width: 100%;
+    height: 100px;
+    border-radius: var(--skeleton-radius);
+}
+
+/* ============================================================
+   SKELETON LAYOUTS
+   ============================================================ */
+
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
+}
+
+.skeleton-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.skeleton-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.skeleton-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* ============================================================
+   USER INFO SKELETON
+   ============================================================ */
+
+.skeleton-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.skeleton-user-info .skeleton-col {
+    gap: 6px;
+}
+
+/* ============================================================
+   GATEWAY ITEM SKELETON
+   ============================================================ */
+
+.skeleton-gateway-item {
+    padding: 12px;
+    background: var(--skeleton-base);
+    border-radius: var(--skeleton-radius);
+    border: 1px solid var(--skeleton-border);
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-gateway-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-secondary), transparent);
+    opacity: 0.4;
+    border-radius: 3px 0 0 3px;
+}
+
+.skeleton-gateway-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-shine) 20%,
+        var(--skeleton-shine) 40%,
+        transparent 100%
+    );
+    animation: skeleton-shimmer var(--skeleton-animation-duration) infinite linear;
+    transform: translateX(-100%);
+}
+
+.skeleton-gateway-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.skeleton-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-pulse {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   TOOL ITEM SKELETON
+   ============================================================ */
+
+.skeleton-tool-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: var(--skeleton-radius);
+}
+
+.skeleton-tool-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   CHAT MESSAGE SKELETON
+   ============================================================ */
+
+.skeleton-message {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    animation: skeleton-fade-in 0.3s ease-out;
+}
+
+@keyframes skeleton-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.skeleton-message-user {
+    flex-direction: row-reverse;
+}
+
+.skeleton-message-content {
+    flex: 1;
+    max-width: 70%;
+    padding: 16px;
+    background: var(--skeleton-base);
+    border-radius: 16px;
+    border: 1px solid var(--skeleton-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-message-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-shine) 20%,
+        var(--skeleton-shine) 40%,
+        transparent 100%
+    );
+    animation: skeleton-shimmer var(--skeleton-animation-duration) infinite linear;
+    transform: translateX(-100%);
+}
+
+.skeleton-message-user .skeleton-message-content {
+    background: rgba(255, 107, 43, 0.15);
+    border-color: rgba(255, 107, 43, 0.3);
+}
+
+/* ============================================================
+   CHAT INPUT SKELETON
+   ============================================================ */
+
+.skeleton-chat-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--skeleton-base);
+    border-radius: 12px;
+    border: 1px solid var(--skeleton-border);
+}
+
+.skeleton-input-field {
+    flex: 1;
+    height: 44px;
+    border-radius: 22px;
+}
+
+/* ============================================================
+   FULL PAGE SKELETON LOADER
+   ============================================================ */
+
+.skeleton-page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 0.4s ease-out;
+}
+
+.skeleton-page-loader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.skeleton-loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* ============================================================
+   SVG ANIMATED LOADER
+   ============================================================ */
+
+.skeleton-svg-loader {
+    width: 80px;
+    height: 80px;
+}
+
+.skeleton-svg-loader svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Outer ring animation */
+.skeleton-svg-loader .outer-ring {
+    fill: none;
+    stroke: var(--color-secondary);
+    stroke-width: 2;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: skeleton-ring-draw 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes skeleton-ring-draw {
+    0% {
+        stroke-dashoffset: 200;
+        transform: rotate(0deg);
+    }
+    50% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: -200;
+        transform: rotate(360deg);
+    }
+}
+
+/* Inner pulse circle */
+.skeleton-svg-loader .inner-pulse {
+    fill: var(--color-secondary);
+    opacity: 0.3;
+    animation: skeleton-inner-pulse 1.5s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes skeleton-inner-pulse {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+/* Center glow */
+.skeleton-svg-loader .center-glow {
+    fill: var(--color-accent);
+    animation: skeleton-glow 2s ease-in-out infinite;
+}
+
+@keyframes skeleton-glow {
+    0%, 100% {
+        opacity: 0.6;
+        filter: blur(0px);
+    }
+    50% {
+        opacity: 1;
+        filter: blur(2px);
+    }
+}
+
+/* Orbiting dots */
+.skeleton-svg-loader .orbit-dot {
+    fill: var(--color-secondary-light);
+    animation: skeleton-orbit 3s linear infinite;
+    transform-origin: 40px 40px;
+}
+
+.skeleton-svg-loader .orbit-dot:nth-child(2) {
+    animation-delay: -1s;
+}
+
+.skeleton-svg-loader .orbit-dot:nth-child(3) {
+    animation-delay: -2s;
+}
+
+@keyframes skeleton-orbit {
+    from {
+        transform: rotate(0deg) translateX(25px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(25px) rotate(-360deg);
+    }
+}
+
+/* ============================================================
+   LOADING TEXT ANIMATION
+   ============================================================ */
+
+.skeleton-loading-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.skeleton-loading-text span {
+    display: inline-block;
+    animation: skeleton-text-wave 1.5s ease-in-out infinite;
+}
+
+.skeleton-loading-text span:nth-child(1) { animation-delay: 0s; }
+.skeleton-loading-text span:nth-child(2) { animation-delay: 0.1s; }
+.skeleton-loading-text span:nth-child(3) { animation-delay: 0.2s; }
+.skeleton-loading-text span:nth-child(4) { animation-delay: 0.3s; }
+.skeleton-loading-text span:nth-child(5) { animation-delay: 0.4s; }
+.skeleton-loading-text span:nth-child(6) { animation-delay: 0.5s; }
+.skeleton-loading-text span:nth-child(7) { animation-delay: 0.6s; }
+
+@keyframes skeleton-text-wave {
+    0%, 100% {
+        opacity: 0.4;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+/* ============================================================
+   INLINE LOADING INDICATOR
+   ============================================================ */
+
+.skeleton-inline-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.skeleton-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    animation: skeleton-dot-bounce 1.2s ease-in-out infinite;
+}
+
+.skeleton-dot:nth-child(1) { animation-delay: 0s; }
+.skeleton-dot:nth-child(2) { animation-delay: 0.2s; }
+.skeleton-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes skeleton-dot-bounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   PROGRESS BAR SKELETON
+   ============================================================ */
+
+.skeleton-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--skeleton-base);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeleton-progress::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(
+        90deg,
+        var(--color-secondary),
+        var(--color-accent),
+        var(--color-secondary)
+    );
+    border-radius: 2px;
+    animation: skeleton-progress-slide 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-progress-slide {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(400%);
+    }
+}
+
+/* ============================================================
+   SIDEBAR SKELETON
+   ============================================================ */
+
+.skeleton-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    gap: 20px;
+}
+
+.skeleton-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--skeleton-border);
+}
+
+.skeleton-logo {
+    height: 24px;
+    width: 140px;
+}
+
+.skeleton-sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skeleton-section-title {
+    height: 12px;
+    width: 100px;
+    margin-bottom: 4px;
+}
+
+/* ============================================================
+   CHAT AREA SKELETON
+   ============================================================ */
+
+.skeleton-chat-area {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    gap: 16px;
+}
+
+.skeleton-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--skeleton-border);
+}
+
+.skeleton-chat-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+}
+
+.skeleton-chat-footer {
+    padding-top: 16px;
+    border-top: 1px solid var(--skeleton-border);
+}
+
+/* ============================================================
+   RESPONSIVE SKELETON
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .skeleton-message-content {
+        max-width: 85%;
+    }
+    
+    .skeleton-svg-loader {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ============================================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton::before,
+    .skeleton-gateway-item::after,
+    .skeleton-message-content::before,
+    .skeleton-progress::before {
+        animation: none;
+        background: var(--skeleton-pulse);
+    }
+    
+    .skeleton-svg-loader .outer-ring,
+    .skeleton-svg-loader .inner-pulse,
+    .skeleton-svg-loader .center-glow,
+    .skeleton-svg-loader .orbit-dot,
+    .skeleton-status-dot,
+    .skeleton-dot,
+    .skeleton-loading-text span {
+        animation: none;
+        opacity: 0.6;
+    }
+}

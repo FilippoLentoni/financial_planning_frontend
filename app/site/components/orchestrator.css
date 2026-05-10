@@ -1,0 +1,1584 @@
+/**
+ * Orchestrator Mode Styles
+ * 
+ * Styles for the multi-agent orchestration UI including:
+ * - Toggle switch
+ * - Worker agent panels
+ * - Parent agent indicators
+ * - Delegation visualization
+ */
+
+/* ============================================================
+   Orchestrator Toggle Switch
+   ============================================================ */
+
+.orchestrator-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg-secondary, #eee);
+    border-radius: 8px;
+    font-size: 0.75rem;
+}
+
+.orchestrator-toggle-label {
+    color: var(--gray-text, #808080);
+    white-space: nowrap;
+}
+
+.orchestrator-toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: var(--gray-border, #d3d5d8);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.orchestrator-toggle-switch.active {
+    background: var(--squid-ink-dark, #0f141a);
+}
+
+.orchestrator-toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.orchestrator-toggle-switch.active::after {
+    transform: translateX(20px);
+}
+
+.orchestrator-toggle-count {
+    color: var(--squid-ink-dark, #0f141a);
+    font-weight: 600;
+}
+
+/* ============================================================
+   Orchestrator Status Bar
+   ============================================================ */
+
+.orchestrator-status-bar {
+    display: none;
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary, #eee);
+    border-bottom: 1px solid var(--gray-border, #d3d5d8);
+    font-size: 0.8rem;
+}
+
+.orchestrator-status-bar.active {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.orchestrator-status-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.orchestrator-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(15, 20, 26, 0.08);
+    border-radius: 4px;
+    color: var(--squid-ink-dark, #0f141a);
+}
+
+.orchestrator-status-badge .icon {
+    font-size: 1rem;
+}
+
+.orchestrator-workers-list {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.orchestrator-worker-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.5rem;
+    background: var(--white, #ffffff);
+    border: 1px solid var(--gray-border, #d3d5d8);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: var(--gray-text, #808080);
+}
+
+.orchestrator-worker-chip.active {
+    border-color: var(--squid-ink-dark, #0f141a);
+    color: var(--squid-ink-dark, #0f141a);
+}
+
+.orchestrator-worker-chip .worker-status {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gray-text, #808080);
+}
+
+.orchestrator-worker-chip.active .worker-status {
+    background: var(--color-success, #22c55e);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Worker chip with history indicator */
+.orchestrator-worker-chip {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.orchestrator-worker-chip:hover {
+    background: var(--bg-secondary, #eee);
+    border-color: var(--gray-text, #808080);
+}
+
+.orchestrator-worker-chip.has-history {
+    border-color: var(--squid-ink-dark, #0f141a);
+}
+
+.orchestrator-worker-chip .worker-history-indicator {
+    font-size: 0.65rem;
+    margin-left: 0.25rem;
+}
+
+/* ============================================================
+   Message Indicators for Orchestrator Mode
+   ============================================================ */
+
+.chat-msg.orchestrator-parent .chat-msg-body {
+    border-left: 3px solid var(--accent-color, #6366f1);
+    padding-left: 1rem;
+}
+
+.chat-msg.orchestrator-worker .chat-msg-body {
+    border-left: 3px solid var(--warning-color, #f59e0b);
+    padding-left: 1rem;
+    margin-left: 1.5rem;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.orchestrator-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+}
+
+.orchestrator-role-badge.parent {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--accent-color, #6366f1);
+}
+
+.orchestrator-role-badge.worker {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning-color, #f59e0b);
+}
+
+/* ============================================================
+   Delegation Tool Use (Parent delegating to Worker)
+   ============================================================ */
+
+.tool-use-container.delegation {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border-color: var(--accent-color, #6366f1);
+}
+
+.tool-use-container.delegation .tool-use-icon {
+    color: var(--accent-color, #6366f1);
+}
+
+.delegation-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    color: var(--accent-color, #6366f1);
+    font-size: 1.2rem;
+    animation: delegation-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes delegation-pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(5px);
+    }
+}
+
+/* ============================================================
+   Worker Processing Panel
+   ============================================================ */
+
+.worker-processing-panel {
+    background: var(--surface-secondary, #1a1a2e);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    overflow: hidden;
+}
+
+.worker-processing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    background: rgba(245, 158, 11, 0.1);
+    border-bottom: 1px solid var(--border-color, #334155);
+}
+
+.worker-processing-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.worker-processing-icon {
+    font-size: 1.2rem;
+}
+
+.worker-processing-name {
+    font-weight: 600;
+    color: var(--warning-color, #f59e0b);
+}
+
+.worker-processing-task {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #94a3b8);
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.worker-processing-status {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    color: var(--text-muted, #64748b);
+}
+
+.worker-processing-status .spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border-color, #334155);
+    border-top-color: var(--warning-color, #f59e0b);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.worker-processing-body {
+    padding: 0.5rem 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.worker-processing-content {
+    font-size: 0.8rem;
+    color: var(--text-primary, #e2e8f0);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.worker-tool-use {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.worker-tool-use-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-secondary, #94a3b8);
+    margin-bottom: 0.25rem;
+}
+
+.worker-tool-use-result {
+    color: var(--text-muted, #64748b);
+    font-family: monospace;
+    font-size: 0.7rem;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+/* ============================================================
+   Orchestrator Summary
+   ============================================================ */
+
+.orchestrator-summary {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.orchestrator-summary-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-color, #6366f1);
+}
+
+.orchestrator-summary-workers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.orchestrator-summary-worker {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--surface-secondary, #1a1a2e);
+    border-radius: 4px;
+}
+
+.orchestrator-summary-worker-icon {
+    font-size: 1rem;
+    color: var(--warning-color, #f59e0b);
+}
+
+.orchestrator-summary-worker-name {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--text-primary, #e2e8f0);
+}
+
+.orchestrator-summary-worker-result {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #94a3b8);
+    margin-top: 0.25rem;
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Robot avatar variations for orchestrator mode */
+.chat-msg.orchestrator-parent .robot-avatar-ai::after {
+    content: '👑';
+    position: absolute;
+    top: -8px;
+    right: -4px;
+    font-size: 0.8rem;
+}
+
+.chat-msg.orchestrator-worker .robot-avatar-ai {
+    transform: scale(0.85);
+}
+
+.chat-msg.orchestrator-worker .robot-avatar-ai::after {
+    content: '⚙️';
+    position: absolute;
+    top: -6px;
+    right: -4px;
+    font-size: 0.65rem;
+}
+
+/* ============================================================
+   Worker Side Panel - Shows worker chat during orchestration
+   ============================================================ */
+
+.worker-side-panel {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 420px;
+    height: 100vh;
+    background: var(--white, #ffffff);
+    border-left: 1px solid var(--gray-border, #d3d5d8);
+    z-index: 1000;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+}
+
+.worker-side-panel.active {
+    right: 0;
+}
+
+.worker-side-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--bg-secondary, #eee);
+    border-bottom: 1px solid var(--gray-border, #d3d5d8);
+}
+
+.worker-side-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--squid-ink-dark, #0f141a);
+}
+
+.worker-side-panel-title .worker-icon {
+    font-size: 1.5rem;
+    animation: worker-bounce 1s ease-in-out infinite;
+}
+
+@keyframes worker-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.worker-side-panel-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.worker-side-panel-close:hover {
+    color: var(--text-primary, #e2e8f0);
+}
+
+.worker-side-panel-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--light-bg, #f9f9f9);
+    border-bottom: 1px solid var(--gray-border, #d3d5d8);
+    font-size: 0.8rem;
+}
+
+.worker-status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success-color, #22c55e);
+    animation: status-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+.worker-side-panel-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Worker message bubbles */
+.worker-message {
+    max-width: 90%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    animation: message-appear 0.3s ease-out;
+}
+
+@keyframes message-appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.worker-message.from-parent {
+    align-self: flex-start;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 12px 12px 12px 4px;
+}
+
+.worker-message.from-worker {
+    align-self: flex-end;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px 12px 4px 12px;
+}
+
+.worker-message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.worker-message.from-parent .worker-message-header {
+    color: var(--accent-color, #6366f1);
+}
+
+.worker-message.from-worker .worker-message-header {
+    color: var(--warning-color, #f59e0b);
+}
+
+.worker-message-content {
+    color: var(--text-primary, #e2e8f0);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.worker-message-content.streaming::after {
+    content: '▋';
+    animation: cursor-blink 0.8s ease-in-out infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Worker tool use indicator */
+.worker-tool-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    margin: 0.5rem 0;
+    animation: tool-pulse 1s ease-in-out infinite;
+}
+
+@keyframes tool-pulse {
+    0%, 100% { 
+        background: rgba(0, 0, 0, 0.3);
+        box-shadow: none;
+    }
+    50% { 
+        background: rgba(245, 158, 11, 0.1);
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+}
+
+.worker-tool-indicator .tool-icon {
+    animation: spin 1s linear infinite;
+}
+
+.worker-tool-indicator .tool-name {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-weight: 600;
+}
+
+/* Worker Tool Use Expandable Container */
+.worker-tool-use-container {
+    background: linear-gradient(145deg, rgba(40, 40, 40, 0.9), rgba(30, 30, 30, 0.9));
+    border-radius: 8px;
+    margin: 8px 0;
+    overflow: hidden;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    font-size: 12px;
+}
+
+.worker-tool-use-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: linear-gradient(90deg, rgba(0, 255, 255, 0.1), transparent);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.worker-tool-use-header:hover {
+    background: linear-gradient(90deg, rgba(0, 255, 255, 0.2), transparent);
+}
+
+.worker-tool-use-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.worker-tool-use-icon {
+    font-size: 14px;
+}
+
+.worker-tool-use-name {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-weight: 600;
+    color: #00d4ff;
+}
+
+.worker-tool-use-status {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.worker-tool-use-status.pending {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.worker-tool-use-status.executing {
+    background: rgba(0, 255, 255, 0.2);
+    color: #00ffff;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.worker-tool-use-status.completed {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.worker-tool-use-status.error {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff4444;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.worker-tool-use-toggle {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.worker-tool-use-container.expanded .worker-tool-use-toggle {
+    transform: rotate(180deg);
+}
+
+.worker-tool-use-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.worker-tool-use-container.expanded .worker-tool-use-body {
+    max-height: 500px;
+}
+
+.worker-tool-use-input,
+.worker-tool-use-result {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.worker-tool-use-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.worker-tool-use-content,
+.worker-tool-use-result-content {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    color: #e0e0e0;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.worker-tool-use-result-content {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.worker-tool-use-result-content.error {
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    color: #ff6b6b;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+}
+
+/* ============================================================
+   Worker Panel Mini Robot Animation
+   ============================================================ */
+
+.worker-robot-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    animation: worker-robot-glow 2s ease-in-out infinite;
+}
+
+@keyframes worker-robot-glow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+}
+
+.worker-robot-head {
+    position: relative;
+    width: 50px;
+    height: 45px;
+    background: linear-gradient(180deg, #4a4a6a 0%, #3a3a5a 100%);
+    border-radius: 8px 8px 5px 5px;
+    margin-bottom: 0.5rem;
+}
+
+.worker-robot-head::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 8px;
+    background: #f59e0b;
+    border-radius: 2px 2px 0 0;
+    animation: antenna-pulse 1s ease-in-out infinite;
+}
+
+@keyframes antenna-pulse {
+    0%, 100% { box-shadow: 0 -3px 6px rgba(245, 158, 11, 0.5); }
+    50% { box-shadow: 0 -5px 10px rgba(245, 158, 11, 0.8); }
+}
+
+.worker-robot-eyes {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.worker-robot-eye {
+    width: 10px;
+    height: 10px;
+    background: #f59e0b;
+    border-radius: 50%;
+    animation: eye-blink 3s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+@keyframes eye-blink {
+    0%, 45%, 55%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+}
+
+.worker-robot-mouth {
+    width: 20px;
+    height: 5px;
+    background: #f59e0b;
+    border-radius: 0 0 3px 3px;
+    margin: 8px auto 0;
+    animation: mouth-talk 0.3s ease-in-out infinite;
+}
+
+@keyframes mouth-talk {
+    0%, 100% { height: 5px; }
+    50% { height: 8px; }
+}
+
+.worker-robot-info {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.worker-robot-tool-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--warning-color, #f59e0b);
+    margin-bottom: 0.25rem;
+}
+
+.worker-robot-status {
+    font-size: 0.65rem;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.worker-robot-animation.complete {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+    animation: none;
+}
+
+.worker-robot-animation.complete .worker-robot-head::before,
+.worker-robot-animation.complete .worker-robot-eye {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.worker-robot-animation.complete .worker-robot-mouth {
+    background: #22c55e;
+    animation: none;
+    border-radius: 0 0 8px 8px;
+    height: 6px;
+}
+
+.worker-robot-animation.error {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+    animation: none;
+}
+
+.worker-robot-animation.error .worker-robot-head::before,
+.worker-robot-animation.error .worker-robot-eye {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+.worker-robot-animation.error .worker-robot-mouth {
+    background: #ef4444;
+    animation: none;
+}
+
+/* Worker Robot Visor Display - Inline version for worker panels */
+.worker-robot-visor {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    background: linear-gradient(145deg, rgba(20, 30, 50, 0.95), rgba(10, 20, 40, 0.98));
+    border: 1px solid rgba(0, 200, 255, 0.4);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.65rem;
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.3), inset 0 0 10px rgba(0, 200, 255, 0.1);
+    z-index: 10;
+    margin-top: 8px;
+}
+
+.worker-robot-visor-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 200, 255, 0.3);
+    margin-bottom: 6px;
+}
+
+.worker-robot-visor-header .visor-icon {
+    font-size: 0.8rem;
+}
+
+.worker-robot-visor-header .visor-tool-name {
+    font-family: 'Monaco', 'Courier New', monospace;
+    color: #00d4ff;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.worker-robot-visor-content {
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+.worker-robot-visor-content .visor-input,
+.worker-robot-visor-content .visor-output {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.6rem;
+    color: #a0e0a0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.3;
+}
+
+.worker-robot-visor-content .visor-output {
+    color: #80ff80;
+}
+
+.worker-robot-visor-content .visor-output.error {
+    color: #ff6b6b;
+}
+
+/* Visor scanline effect */
+.worker-robot-visor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 200, 255, 0.03) 2px,
+        rgba(0, 200, 255, 0.03) 4px
+    );
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+/* Complete state visor */
+.worker-robot-animation.complete .worker-robot-visor {
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3), inset 0 0 10px rgba(34, 197, 94, 0.1);
+}
+
+.worker-robot-animation.complete .worker-robot-visor-header .visor-tool-name {
+    color: #22c55e;
+}
+
+/* Error state visor */
+.worker-robot-animation.error .worker-robot-visor {
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3), inset 0 0 10px rgba(239, 68, 68, 0.1);
+}
+
+.worker-robot-animation.error .worker-robot-visor-header .visor-tool-name {
+    color: #ef4444;
+}
+
+/* Inline visor input/output styling */
+.worker-robot-visor-content .visor-input {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.6rem;
+    color: #80c0ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    padding: 3px 5px;
+    background: rgba(0, 100, 200, 0.15);
+    border-radius: 3px;
+}
+
+.worker-robot-visor-content .visor-output {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.6rem;
+    color: #80ff80;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    padding: 3px 5px;
+    background: rgba(0, 200, 100, 0.15);
+    border-radius: 3px;
+}
+
+.worker-robot-visor-content .visor-output.error {
+    color: #ff6b6b;
+    background: rgba(200, 50, 50, 0.15);
+}
+
+/* Worker panel inline animation - active state glow */
+.worker-robot-animation.active {
+    animation: worker-robot-glow 2s ease-in-out infinite;
+}
+
+/* Compact mini panel visor */
+.worker-mini-panel .worker-robot-visor {
+    max-width: 180px;
+    padding: 6px;
+}
+
+.worker-mini-panel .worker-robot-visor-header .visor-tool-name {
+    font-size: 0.6rem;
+}
+
+.worker-mini-panel .worker-robot-visor-content .visor-input,
+.worker-mini-panel .worker-robot-visor-content .visor-output {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+}
+
+/* Communication Animation - Lines between parent and worker */
+.communication-connector {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.communication-line {
+    stroke: var(--accent-color, #6366f1);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 8 4;
+    animation: dash-flow 1s linear infinite;
+}
+
+@keyframes dash-flow {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: -12; }
+}
+
+.communication-particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-color, #6366f1);
+    box-shadow: 0 0 10px var(--accent-color, #6366f1);
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.communication-particle.to-worker {
+    animation: particle-to-worker 0.8s ease-out forwards;
+}
+
+.communication-particle.to-parent {
+    background: var(--warning-color, #f59e0b);
+    box-shadow: 0 0 10px var(--warning-color, #f59e0b);
+    animation: particle-to-parent 0.8s ease-out forwards;
+}
+
+/* Main chat area adjustment when panel is open */
+.chatbot-container.worker-panel-open {
+    margin-right: 430px;
+    transition: margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Worker Configuration Panel
+   ============================================================ */
+
+.worker-config-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.worker-config-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.worker-config-panel {
+    background: var(--surface-primary, #0f0f1e);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: panel-appear 0.3s ease-out;
+}
+
+@keyframes panel-appear {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.worker-config-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    border-bottom: 1px solid var(--border-color, #334155);
+}
+
+.worker-config-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-color, #6366f1);
+}
+
+.worker-config-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+}
+
+.worker-config-close:hover {
+    color: var(--text-primary, #e2e8f0);
+}
+
+.worker-config-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.25rem;
+}
+
+.worker-config-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.worker-config-item {
+    background: var(--surface-secondary, #1a1a2e);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.worker-config-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: rgba(245, 158, 11, 0.1);
+    border-bottom: 1px solid var(--border-color, #334155);
+}
+
+.worker-config-item-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--warning-color, #f59e0b);
+}
+
+.worker-config-item-tools {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.worker-config-item-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.worker-config-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.worker-config-field label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.worker-config-field select,
+.worker-config-field input {
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-primary, #0f0f1e);
+    border: 1px solid var(--border-color, #334155);
+    border-radius: 6px;
+    color: var(--text-primary, #e2e8f0);
+    font-size: 0.9rem;
+}
+
+.worker-config-field select:focus,
+.worker-config-field input:focus {
+    outline: none;
+    border-color: var(--accent-color, #6366f1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.worker-config-field input[type="number"] {
+    width: 100px;
+}
+
+.worker-config-field .field-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted, #64748b);
+}
+
+.worker-config-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color, #334155);
+    background: var(--surface-secondary, #1a1a2e);
+}
+
+.worker-config-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.worker-config-btn.primary {
+    background: var(--accent-color, #6366f1);
+    color: white;
+}
+
+.worker-config-btn.primary:hover {
+    background: #5558e8;
+}
+
+.worker-config-btn.secondary {
+    background: var(--surface-primary, #0f0f1e);
+    border: 1px solid var(--border-color, #334155);
+    color: var(--text-secondary, #94a3b8);
+}
+
+.worker-config-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary, #e2e8f0);
+}
+
+/* Settings gear icon in status bar */
+.orchestrator-settings-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.orchestrator-settings-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary, #e2e8f0);
+}
+
+/* ============================================================
+   Worker Delegation Separator
+   ============================================================ */
+
+.worker-delegation-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    margin: 0.5rem 0;
+    color: var(--text-muted, #64748b);
+    font-size: 0.75rem;
+}
+
+.worker-delegation-separator span {
+    padding: 0.25rem 0.75rem;
+    background: var(--surface-secondary, #1a1a2e);
+    border-radius: 4px;
+    border: 1px dashed var(--border-color, #334155);
+}
+
+/* ============================================================
+   Multi Worker Panels Container (Multiple simultaneous panels)
+   ============================================================ */
+
+.multi-worker-panels-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 350px);
+    grid-template-rows: repeat(2, 50vh);
+    gap: 0;
+    z-index: 1000;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.worker-mini-panel {
+    width: 350px;
+    height: 50vh;
+    background: var(--surface-primary, #0f0f1e);
+    border-left: 2px solid var(--border-color, #334155);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+.worker-mini-panel.active {
+    transform: translateX(0);
+}
+
+.worker-mini-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%);
+    border-bottom: 1px solid var(--border-color, #334155);
+}
+
+.worker-mini-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--warning-color, #f59e0b);
+    font-size: 0.9rem;
+}
+
+.worker-mini-panel-title .worker-icon {
+    font-size: 1.2rem;
+    animation: worker-bounce 1s ease-in-out infinite;
+}
+
+.worker-mini-panel-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.worker-mini-panel-close:hover {
+    color: var(--text-primary, #e2e8f0);
+}
+
+.worker-mini-panel-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: var(--surface-secondary, #1a1a2e);
+    border-bottom: 1px solid var(--border-color, #334155);
+    font-size: 0.75rem;
+}
+
+.worker-mini-panel-status .worker-status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-color, #22c55e);
+    animation: status-pulse 1.5s ease-in-out infinite;
+}
+
+.worker-mini-panel .worker-panel-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Chatbot container adjustments for multiple panels */
+.chatbot-container.worker-panels-1 {
+    margin-right: 360px;
+}
+
+.chatbot-container.worker-panels-2 {
+    margin-right: 710px;
+}
+
+.chatbot-container.worker-panels-3 {
+    margin-right: 1060px;
+}
+
+/* Second panel styling (different color accent) */
+.worker-mini-panel:nth-child(2) .worker-mini-panel-header {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+}
+
+.worker-mini-panel:nth-child(2) .worker-mini-panel-title {
+    color: var(--accent-color, #6366f1);
+}
+
+.worker-mini-panel:nth-child(2) .worker-mini-panel-title .worker-icon {
+    animation-delay: 0.3s;
+}
+
+/* Third panel styling (green accent) */
+.worker-mini-panel:nth-child(3) .worker-mini-panel-header {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.15) 100%);
+}
+
+.worker-mini-panel:nth-child(3) .worker-mini-panel-title {
+    color: var(--success-color, #22c55e);
+}
+
+.worker-mini-panel:nth-child(3) .worker-mini-panel-title .worker-icon {
+    animation-delay: 0.6s;
+}
+
+/* Compact tool use for mini panels */
+.worker-mini-panel .tool-use-container {
+    font-size: 0.8rem;
+}
+
+.worker-mini-panel .tool-use-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.worker-mini-panel .tool-use-body {
+    max-height: 200px;
+}
+
+.worker-mini-panel .tool-use-input-content,
+.worker-mini-panel .tool-use-result-content {
+    max-height: 80px;
+    font-size: 0.7rem;
+}
+
+/* Compact robot animation for mini panels */
+.worker-mini-panel .worker-robot-animation {
+    padding: 0.75rem;
+    margin: 0.4rem 0;
+}
+
+.worker-mini-panel .worker-robot-head {
+    width: 40px;
+    height: 35px;
+}
+
+.worker-mini-panel .worker-robot-eyes {
+    margin-top: 8px;
+}
+
+.worker-mini-panel .worker-robot-eye {
+    width: 8px;
+    height: 8px;
+}
+
+.worker-mini-panel .worker-robot-mouth {
+    width: 16px;
+    height: 4px;
+    margin: 6px auto 0;
+}
+
+.worker-mini-panel .worker-robot-tool-name {
+    font-size: 0.65rem;
+}
+
+.worker-mini-panel .worker-robot-status {
+    font-size: 0.6rem;
+}
+
+/* Compact messages for mini panels */
+.worker-mini-panel .worker-message {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    max-width: 95%;
+}
+
+.worker-mini-panel .worker-message-header {
+    font-size: 0.65rem;
+}
+
+/* ============================================================
+   Responsive Adjustments
+   ============================================================ */
+
+@media (max-width: 1200px) {
+    .worker-side-panel {
+        width: 350px;
+    }
+    
+    .chatbot-container.worker-panel-open {
+        margin-right: 360px;
+    }
+}
+
+@media (max-width: 900px) {
+    .worker-side-panel {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .chatbot-container.worker-panel-open {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .orchestrator-status-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .orchestrator-workers-list {
+        flex-wrap: wrap;
+    }
+    
+    .chat-msg.orchestrator-worker .chat-msg-body {
+        margin-left: 0.5rem;
+    }
+}

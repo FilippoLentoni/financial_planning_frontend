@@ -1,0 +1,199 @@
+/* ============================================================
+   Conversation History Sidebar Styles
+   ============================================================ */
+
+/* Conversations section in sidebar */
+.conversations-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.conversations-section .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    flex-shrink: 0;
+}
+
+.conversations-section .section-header h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary, #666);
+    margin: 0;
+}
+
+.conversations-section .section-header .btn-new-chat {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--primary-color, #0073bb);
+    background: transparent;
+    border: 1px solid var(--primary-color, #0073bb);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.conversations-section .section-header .btn-new-chat:hover {
+    background: var(--primary-color, #0073bb);
+    color: white;
+}
+
+/* Conversation list container */
+.conversation-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0.5rem 0.5rem;
+}
+
+.conversation-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.conversation-list::-webkit-scrollbar-thumb {
+    background: var(--border-color, #e0e0e0);
+    border-radius: 2px;
+}
+
+/* Individual conversation item */
+.conversation-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.5rem 0.5rem;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    position: relative;
+    gap: 0.5rem;
+}
+
+.conversation-item:hover {
+    background: var(--hover-bg, #f0f0f0);
+}
+
+.conversation-item.active {
+    background: var(--active-bg, #e8f0fe);
+}
+
+.conversation-item-content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.conversation-item-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-primary, #333);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.conversation-item.active .conversation-item-title {
+    color: var(--primary-color, #0073bb);
+    font-weight: 600;
+}
+
+.conversation-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    color: var(--text-tertiary, #999);
+    margin-top: 2px;
+}
+
+.conversation-item-time {
+    white-space: nowrap;
+}
+
+.conversation-item-count {
+    white-space: nowrap;
+}
+
+/* Delete button on hover */
+.conversation-item-delete {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary, #999);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.15s ease;
+}
+
+.conversation-item:hover .conversation-item-delete {
+    display: flex;
+}
+
+.conversation-item-delete:hover {
+    background: #fee;
+    color: #e53e3e;
+}
+
+/* Chat icon for conversation items */
+.conversation-item-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary, #999);
+    margin-top: 2px;
+}
+
+.conversation-item.active .conversation-item-icon {
+    color: var(--primary-color, #0073bb);
+}
+
+/* Empty state */
+.conversation-empty {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-tertiary, #999);
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Loading state */
+.conversation-loading {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-tertiary, #999);
+    font-size: 0.75rem;
+}
+
+/* Error state */
+.conversation-error {
+    padding: 0.75rem;
+    text-align: center;
+    color: #e53e3e;
+    font-size: 0.75rem;
+}
+
+/* Sidebar collapsed state */
+.sidebar.collapsed .conversations-section {
+    display: none;
+}

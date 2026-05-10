@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6fa;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(230, 230, 250, 0.3);
+            border-top-color: #4da6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .message {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .submessage {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <p class="message">Completing authentication...</p>
+        <p class="submessage">This window will close automatically.</p>
+    </div>
+    <script>
+        (function() {
+            // Extract OAuth params from URL
+            var params = new URLSearchParams(window.location.search);
+            var code = params.get('code');
+            var state = params.get('state');
+            var error = params.get('error');
+            var errorDescription = params.get('error_description');
+            
+            console.log('[Callback] OAuth callback received', { code: !!code, state: !!state, error: error });
+            
+            // Send message to opener (parent window)
+            if (window.opener && window.opener !== window) {
+                // Try to return focus to main window immediately
+                try {
+                    window.opener.focus();
+                } catch (focusError) {
+                    console.log('[Callback] Could not focus opener:', focusError);
+                }
+                
+                var message = {
+                    type: 'gateway-oauth-callback',
+                    code: code,
+                    state: state,
+                    error: error,
+                    error_description: errorDescription
+                };
+                
+                try {
+                    window.opener.postMessage(message, window.location.origin);
+                    console.log('[Callback] Sent postMessage to opener');
+                } catch (postMessageError) {
+                    console.error('[Callback] Failed to send postMessage:', postMessageError);
+                }
+                
+                // Update UI independently
+                try {
+                    document.querySelector('.spinner').style.display = 'none';
+                    document.querySelector('.message').textContent = 'Authentication complete!';
+                    document.querySelector('.submessage').textContent = 'You can close this window or click your main browser tab.';
+                } catch (uiError) {
+                    console.warn('[Callback] Could not update UI:', uiError);
+                }
+            } else {
+                console.log('[Callback] No opener found, this might be a direct navigation');
+                // Redirect to main app if not a popup
+                document.querySelector('.message').textContent = 'Redirecting to application...';
+                setTimeout(function() {
+                    window.location.href = '/';
+                }, 1000);
+            }
+        })();
+    </script>
+</body>
+</html>

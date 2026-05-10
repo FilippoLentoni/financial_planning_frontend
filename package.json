@@ -1,0 +1,25 @@
+{
+  "name": "financial-planning-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && python3 tests/test_app_config.py",
+    "synth": "cdk synth",
+    "deploy:pipeline": "cdk deploy FinancialPlanningFrontendPipelineStack",
+    "deploy:personal": "cdk deploy FinancialPlanningFrontend-PersonalStack",
+    "deploy:alpha": "cdk deploy FinancialPlanningFrontend-AlphaStack",
+    "deploy:gamma": "cdk deploy FinancialPlanningFrontend-GammaStack",
+    "deploy:prod": "cdk deploy FinancialPlanningFrontend-ProdStack"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.252.0",
+    "constructs": "^10.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "aws-cdk": "^2.252.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

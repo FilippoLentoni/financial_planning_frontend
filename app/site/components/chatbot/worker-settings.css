@@ -1,0 +1,351 @@
+/**
+ * Worker Settings Panel Styles
+ */
+
+.worker-settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.worker-settings-overlay.hidden {
+    display: none;
+}
+
+.worker-settings-panel {
+    background: var(--surface-color, #1e1e2e);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color, #363649);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.worker-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color, #363649);
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 191, 255, 0.1));
+}
+
+.worker-settings-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color, #e0e0e0);
+}
+
+.worker-settings-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary, #a0a0a0);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.worker-settings-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color, #e0e0e0);
+}
+
+.worker-settings-content {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.worker-settings-content .no-workers {
+    text-align: center;
+    color: var(--text-secondary, #a0a0a0);
+    padding: 2rem;
+}
+
+.worker-settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.worker-setting-card {
+    background: var(--background-color, #16161e);
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.worker-setting-card:hover {
+    border-color: var(--primary-color, #8a2be2);
+}
+
+.worker-setting-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), transparent);
+    border-bottom: 1px solid var(--border-color, #363649);
+}
+
+.worker-setting-header .worker-icon {
+    font-size: 1.25rem;
+}
+
+.worker-setting-header .worker-name {
+    font-weight: 600;
+    color: var(--text-color, #e0e0e0);
+    flex: 1;
+}
+
+.worker-tools-badge {
+    background: var(--primary-color, #8a2be2);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.worker-setting-body {
+    padding: 1rem;
+}
+
+.setting-row {
+    margin-bottom: 1rem;
+}
+
+.setting-row:last-child {
+    margin-bottom: 0;
+}
+
+.setting-row label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary, #a0a0a0);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.worker-model-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 6px;
+    background: var(--surface-color, #1e1e2e);
+    color: var(--text-color, #e0e0e0);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.worker-model-select:hover {
+    border-color: var(--primary-color, #8a2be2);
+}
+
+.worker-model-select:focus {
+    outline: none;
+    border-color: var(--primary-color, #8a2be2);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+}
+
+.worker-model-select optgroup {
+    font-weight: 600;
+    color: var(--text-secondary, #a0a0a0);
+}
+
+.worker-model-select option {
+    padding: 0.5rem;
+}
+
+.concurrency-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.concurrency-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 6px;
+    background: var(--surface-color, #1e1e2e);
+    color: var(--text-color, #e0e0e0);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.concurrency-btn:hover {
+    background: var(--primary-color, #8a2be2);
+    border-color: var(--primary-color, #8a2be2);
+    color: white;
+}
+
+.concurrency-btn:active {
+    transform: scale(0.95);
+}
+
+.worker-concurrency-input {
+    width: 60px;
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 6px;
+    background: var(--surface-color, #1e1e2e);
+    color: var(--text-color, #e0e0e0);
+    font-size: 1rem;
+    font-weight: 600;
+    -moz-appearance: textfield;
+}
+
+.worker-concurrency-input::-webkit-outer-spin-button,
+.worker-concurrency-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.worker-concurrency-input:focus {
+    outline: none;
+    border-color: var(--primary-color, #8a2be2);
+}
+
+.setting-help {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-tertiary, #707070);
+}
+
+.worker-settings-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color, #363649);
+    background: var(--background-color, #16161e);
+}
+
+.worker-settings-footer .btn-secondary {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-secondary, #a0a0a0);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.worker-settings-footer .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color, #e0e0e0);
+}
+
+.worker-settings-footer .btn-primary {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--primary-color, #8a2be2), var(--secondary-color, #00bfff));
+    color: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.worker-settings-footer .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+}
+
+.worker-settings-footer .btn-primary.saved {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Orchestrator Status Bar Settings Button */
+.orchestrator-settings-btn {
+    background: none;
+    border: 1px solid var(--border-color, #363649);
+    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    color: var(--text-secondary, #a0a0a0);
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.orchestrator-settings-btn:hover {
+    background: rgba(138, 43, 226, 0.2);
+    border-color: var(--primary-color, #8a2be2);
+    color: var(--text-color, #e0e0e0);
+}
+
+/* Add settings button to orchestrator status bar */
+.orchestrator-status-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: light) {
+    .worker-settings-panel {
+        background: #ffffff;
+        border-color: #e0e0e0;
+    }
+    
+    .worker-settings-header {
+        border-bottom-color: #e0e0e0;
+    }
+    
+    .worker-setting-card {
+        background: #f5f5f5;
+        border-color: #e0e0e0;
+    }
+    
+    .worker-model-select,
+    .concurrency-btn,
+    .worker-concurrency-input {
+        background: #ffffff;
+        border-color: #e0e0e0;
+        color: #333333;
+    }
+    
+    .worker-settings-footer {
+        background: #f5f5f5;
+        border-top-color: #e0e0e0;
+    }
+}
