@@ -2,6 +2,8 @@ node_modules/
 cdk.out/
 dist/
 *.js
+!app/site/**/*.js
+app/site/dev-config.js
 *.d.ts
 *.js.map
 __pycache__/
