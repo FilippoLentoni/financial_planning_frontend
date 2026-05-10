@@ -1,0 +1,312 @@
+/**
+ * Stream Animation Styles - Simple Robot Indicator
+ * 
+ * Minimal streaming indicator with animated robot at the top.
+ */
+
+/* ============================================================
+   ROBOT SPEAKER OVERLAY
+   ============================================================ */
+
+.robot-speaker-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, 
+        rgba(13, 13, 20, 0.95) 0%, 
+        rgba(13, 13, 20, 0.7) 60%,
+        transparent 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 1rem;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.robot-speaker-overlay.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.robot-speaker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.robot-speaker-head {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+    border-radius: 14px;
+    position: relative;
+    box-shadow: 
+        0 0 20px rgba(255, 107, 43, 0.4),
+        0 0 40px rgba(255, 107, 43, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    animation: robotFloat 3s ease-in-out infinite;
+}
+
+@keyframes robotFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Robot face plate (visor) */
+.robot-speaker-head::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 7px;
+    right: 7px;
+    height: 24px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d14 100%);
+    border-radius: 5px;
+    border: 2px solid rgba(255, 107, 43, 0.3);
+    z-index: 1;
+}
+
+/* Robot eyes */
+.robot-eye {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle at 40% 40%, 
+        #ffdd88 0%, 
+        var(--color-accent) 30%, 
+        #cc7722 80%, 
+        #884400 100%);
+    border-radius: 50%;
+    top: 15px;
+    z-index: 2;
+    border: 2px solid rgba(255, 200, 100, 0.5);
+    box-shadow: 
+        0 0 8px var(--color-accent), 
+        0 0 12px rgba(255, 170, 51, 0.5);
+}
+
+/* Pupil effect */
+.robot-eye::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #0d0d14;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.robot-eye.left { left: 12px; }
+.robot-eye.right { right: 12px; }
+
+/* Eye glow when speaking */
+.robot-speaker-overlay.speaking .robot-eye {
+    animation: eyeGlow 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes eyeGlow {
+    0% { 
+        box-shadow: 
+            0 0 8px var(--color-accent), 
+            0 0 12px rgba(255, 170, 51, 0.5);
+    }
+    100% { 
+        box-shadow: 
+            0 0 12px var(--color-accent), 
+            0 0 20px rgba(255, 170, 51, 0.7);
+    }
+}
+
+/* Robot mouth */
+.robot-mouth {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 6px;
+    background: var(--color-bg);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.robot-mouth::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        var(--color-accent), 
+        var(--color-secondary), 
+        var(--color-accent));
+    background-size: 200% 100%;
+    animation: mouthWave 0.3s linear infinite;
+    opacity: 0;
+}
+
+.robot-speaker-overlay.speaking .robot-mouth::after {
+    opacity: 1;
+}
+
+@keyframes mouthWave {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+/* Robot antenna */
+.robot-antenna {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 12px;
+    background: var(--color-bg);
+    border-radius: 2px;
+}
+
+.robot-antenna::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--color-accent);
+    animation: antennaBlink 1s ease-in-out infinite;
+}
+
+@keyframes antennaBlink {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.9); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+/* Speaking indicator text - hidden by default, kept for API compatibility */
+.robot-speaker-text {
+    display: none;
+}
+
+/* ============================================================
+   PARTICLES/EDGE ELEMENTS - HIDDEN
+   These are kept for API compatibility but hidden
+   ============================================================ */
+
+.stream-particles-container,
+.stream-edge-glow,
+.stream-particle,
+.flowing-text-element,
+.data-stream-bg,
+.data-stream-column {
+    display: none !important;
+}
+
+/* ============================================================
+   LINE-BY-LINE TEXT ANIMATION (kept, minimal)
+   ============================================================ */
+
+.chat-msg.streaming .chat-msg-content {
+    position: relative;
+}
+
+/* Simple slot animation for lines */
+.stream-line {
+    display: block;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: lineSlotIn 0.3s ease forwards;
+}
+
+@keyframes lineSlotIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Staggered delays for lines */
+.stream-line:nth-child(1) { animation-delay: 0s; }
+.stream-line:nth-child(2) { animation-delay: 0.03s; }
+.stream-line:nth-child(3) { animation-delay: 0.06s; }
+.stream-line:nth-child(4) { animation-delay: 0.09s; }
+.stream-line:nth-child(5) { animation-delay: 0.12s; }
+
+/* Stream cursor */
+.stream-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--color-accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cursorBlink 0.8s ease-in-out infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Character reveal - simplified */
+.stream-char {
+    display: inline;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .robot-speaker-overlay {
+        height: 80px;
+    }
+    
+    .robot-speaker-head {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .robot-speaker-head::before {
+        top: 8px;
+        left: 5px;
+        right: 5px;
+        height: 18px;
+    }
+    
+    .robot-eye {
+        width: 10px;
+        height: 10px;
+        top: 12px;
+    }
+    
+    .robot-eye::after {
+        width: 4px;
+        height: 4px;
+    }
+    
+    .robot-eye.left { left: 8px; }
+    .robot-eye.right { right: 8px; }
+    
+    .robot-mouth {
+        width: 16px;
+        height: 5px;
+        bottom: 7px;
+    }
+}

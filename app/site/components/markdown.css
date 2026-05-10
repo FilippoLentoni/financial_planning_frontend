@@ -1,0 +1,516 @@
+/**
+ * Markdown Rendering Styles - Futuristic Theme
+ * 
+ * Beautiful styling for markdown content in chat messages.
+ * Matches the orange/burnt orange color scheme.
+ */
+
+/* ============================================================
+   MARKDOWN CONTENT WRAPPER
+   ============================================================ */
+
+.md-content {
+    line-height: 1.7;
+    color: var(--color-text);
+}
+
+.chat-msg-content .md-content,
+.chat-msg-content p,
+.chat-msg-content h1,
+.chat-msg-content h2,
+.chat-msg-content h3,
+.chat-msg-content h4,
+.chat-msg-content h5,
+.chat-msg-content h6 {
+    margin: 0;
+}
+
+/* ============================================================
+   HEADERS
+   ============================================================ */
+
+.md-header {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+}
+
+.md-header:first-child {
+    margin-top: 0;
+}
+
+.md-h1 {
+    font-size: 1.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-secondary);
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.md-h2 {
+    font-size: 1.5rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid rgba(255, 107, 43, 0.3);
+    color: var(--color-accent);
+}
+
+.md-h3 {
+    font-size: 1.25rem;
+    color: var(--color-secondary);
+}
+
+.md-h4 {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+}
+
+.md-h5 {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+
+.md-h6 {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   PARAGRAPHS
+   ============================================================ */
+
+.md-paragraph {
+    margin: 0.75rem 0;
+    line-height: 1.7;
+}
+
+.md-paragraph:first-child {
+    margin-top: 0;
+}
+
+.md-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   INLINE STYLES (Bold, Italic, Strikethrough)
+   ============================================================ */
+
+.md-bold,
+.chat-msg-content strong {
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.md-italic,
+.chat-msg-content em {
+    font-style: italic;
+    color: inherit;
+}
+
+.md-strikethrough,
+.chat-msg-content del {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
+.md-link,
+.chat-msg-content a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.md-link:hover,
+.chat-msg-content a:hover {
+    color: var(--color-secondary);
+    border-bottom-color: var(--color-secondary);
+    text-shadow: 0 0 8px rgba(255, 107, 43, 0.3);
+}
+
+/* External link indicator */
+.md-link[target="_blank"]::after,
+.chat-msg-content a[target="_blank"]::after {
+    content: ' ↗';
+    font-size: 0.75em;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   CODE - INLINE
+   ============================================================ */
+
+.md-inline-code,
+.chat-msg-content code:not(pre code) {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.875em;
+    padding: 0.2em 0.5em;
+    background: rgba(255, 107, 43, 0.1);
+    border: 1px solid rgba(255, 107, 43, 0.2);
+    border-radius: 4px;
+    color: var(--color-accent);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   CODE BLOCKS
+   ============================================================ */
+
+.md-code-block,
+.chat-msg-content pre {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    margin: 1rem 0;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, var(--color-bg) 0%, rgba(13, 13, 20, 0.95) 100%);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-secondary);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    position: relative;
+}
+
+.md-code-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+
+.md-code-block code,
+.chat-msg-content pre code {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    white-space: pre;
+    display: block;
+}
+
+/* Language indicator for code blocks */
+.md-code-block[class*="language-"]::after {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6875rem;
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.md-code-block.language-javascript::after { content: 'JS'; }
+.md-code-block.language-js::after { content: 'JS'; }
+.md-code-block.language-typescript::after { content: 'TS'; }
+.md-code-block.language-ts::after { content: 'TS'; }
+.md-code-block.language-python::after { content: 'PY'; }
+.md-code-block.language-py::after { content: 'PY'; }
+.md-code-block.language-java::after { content: 'JAVA'; }
+.md-code-block.language-bash::after { content: 'BASH'; }
+.md-code-block.language-sh::after { content: 'SH'; }
+.md-code-block.language-shell::after { content: 'SHELL'; }
+.md-code-block.language-sql::after { content: 'SQL'; }
+.md-code-block.language-json::after { content: 'JSON'; }
+.md-code-block.language-yaml::after { content: 'YAML'; }
+.md-code-block.language-yml::after { content: 'YAML'; }
+.md-code-block.language-html::after { content: 'HTML'; }
+.md-code-block.language-css::after { content: 'CSS'; }
+.md-code-block.language-markdown::after { content: 'MD'; }
+.md-code-block.language-md::after { content: 'MD'; }
+.md-code-block.language-xml::after { content: 'XML'; }
+.md-code-block.language-go::after { content: 'GO'; }
+.md-code-block.language-rust::after { content: 'RUST'; }
+.md-code-block.language-c::after { content: 'C'; }
+.md-code-block.language-cpp::after { content: 'C++'; }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+
+.md-list,
+.chat-msg-content ul,
+.chat-msg-content ol {
+    margin: 0.75rem 0;
+    padding-left: 1.75rem;
+}
+
+.md-list li,
+.chat-msg-content li {
+    margin: 0.375rem 0;
+    line-height: 1.6;
+    position: relative;
+}
+
+/* Unordered list custom bullets */
+.md-list:not(.md-ordered) li::marker,
+.chat-msg-content ul li::marker {
+    color: var(--color-secondary);
+}
+
+/* Ordered list styling */
+.md-list.md-ordered li::marker,
+.chat-msg-content ol li::marker {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* Nested lists */
+.md-list .md-list,
+.chat-msg-content ul ul,
+.chat-msg-content ol ol,
+.chat-msg-content ul ol,
+.chat-msg-content ol ul {
+    margin: 0.25rem 0;
+}
+
+/* ============================================================
+   BLOCKQUOTES
+   ============================================================ */
+
+.md-blockquote,
+.chat-msg-content blockquote {
+    margin: 1rem 0;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 107, 43, 0.05);
+    border-left: 4px solid var(--color-secondary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+.md-blockquote p,
+.chat-msg-content blockquote p {
+    margin: 0.5rem 0;
+}
+
+.md-blockquote p:first-child,
+.chat-msg-content blockquote p:first-child {
+    margin-top: 0;
+}
+
+.md-blockquote p:last-child,
+.chat-msg-content blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   HORIZONTAL RULES
+   ============================================================ */
+
+.md-hr,
+.chat-msg-content hr {
+    margin: 1.5rem 0;
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.md-table,
+.chat-msg-content table {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--gray-border, #e0e0e0);
+    background: var(--white, #fff);
+}
+
+.md-table thead,
+.chat-msg-content thead {
+    background: #f2f3f5;
+}
+
+[data-theme="dark"] .md-table thead,
+[data-theme="dark"] .chat-msg-content thead {
+    background: #2a2a2d;
+}
+
+.md-table th,
+.chat-msg-content th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 13px;
+    color: #1a1a1d;
+    border-bottom: 2px solid #d5d8dc;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .md-table th,
+[data-theme="dark"] .chat-msg-content th {
+    color: #e8e8ea;
+    border-bottom-color: #444;
+}
+
+.md-table td,
+.chat-msg-content td {
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid var(--gray-border, #e0e0e0);
+    color: var(--squid-ink-dark, #1a1a1d);
+}
+
+[data-theme="dark"] .md-table td,
+[data-theme="dark"] .chat-msg-content td {
+    color: #e0e0e0;
+}
+
+.md-table tbody tr,
+.chat-msg-content tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.md-table tbody tr:hover,
+.chat-msg-content tbody tr:hover {
+    background: #f8f9fa;
+}
+
+[data-theme="dark"] .md-table tbody tr:hover,
+[data-theme="dark"] .chat-msg-content tbody tr:hover {
+    background: #2a2a2d;
+}
+
+.md-table tbody tr:last-child td,
+.chat-msg-content tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alternating row colors */
+.md-table tbody tr:nth-child(even),
+.chat-msg-content tbody tr:nth-child(even) {
+    background: #fafbfc;
+}
+
+[data-theme="dark"] .md-table tbody tr:nth-child(even),
+[data-theme="dark"] .chat-msg-content tbody tr:nth-child(even) {
+    background: #1e1e21;
+}
+
+.md-table tbody tr:nth-child(even):hover,
+.chat-msg-content tbody tr:nth-child(even):hover {
+    background: #f2f3f5;
+}
+
+[data-theme="dark"] .md-table tbody tr:nth-child(even):hover,
+[data-theme="dark"] .chat-msg-content tbody tr:nth-child(even):hover {
+    background: #2a2a2d;
+}
+
+/* ============================================================
+   SPECIAL: USER MESSAGE OVERRIDES
+   ============================================================ */
+
+/* User messages should have simpler styling */
+.chat-msg.user .chat-msg-content {
+    white-space: pre-wrap;
+}
+
+.chat-msg.user .chat-msg-content .md-inline-code,
+.chat-msg.user .chat-msg-content code {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: inherit;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .md-code-block,
+    .chat-msg-content pre {
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .md-table,
+    .chat-msg-content table {
+        font-size: 0.8125rem;
+    }
+    
+    .md-table th,
+    .md-table td,
+    .chat-msg-content th,
+    .chat-msg-content td {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .md-h1 {
+        font-size: 1.5rem;
+    }
+    
+    .md-h2 {
+        font-size: 1.25rem;
+    }
+    
+    .md-h3 {
+        font-size: 1.125rem;
+    }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+/* Subtle animation for code blocks appearing */
+.md-code-block {
+    animation: codeBlockFadeIn 0.3s ease;
+}
+
+@keyframes codeBlockFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   SCROLLBAR STYLING FOR CODE BLOCKS
+   ============================================================ */
+
+.md-code-block::-webkit-scrollbar,
+.chat-msg-content pre::-webkit-scrollbar {
+    height: 6px;
+}
+
+.md-code-block::-webkit-scrollbar-track,
+.chat-msg-content pre::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border-radius: 3px;
+}
+
+.md-code-block::-webkit-scrollbar-thumb,
+.chat-msg-content pre::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: 3px;
+}
+
+.md-code-block::-webkit-scrollbar-thumb:hover,
+.chat-msg-content pre::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+}

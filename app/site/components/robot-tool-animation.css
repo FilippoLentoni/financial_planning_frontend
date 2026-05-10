@@ -1,0 +1,607 @@
+/**
+ * Robot Tool Use Animation
+ * 
+ * Shows robot executing tools with input/output display in head visor
+ * Follows OWASP10 guidelines - no user input in CSS
+ */
+
+/* ============================================================
+   ROBOT TOOL OVERLAY
+   ============================================================ */
+
+.robot-tool-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 18, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+}
+
+.robot-tool-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ============================================================
+   ROBOT TOOL CONTAINER
+   ============================================================ */
+
+.robot-tool-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ============================================================
+   TOOL ROBOT HEAD (Larger version with visor display)
+   ============================================================ */
+
+.tool-robot {
+    position: relative;
+    width: 280px;
+    height: 320px;
+}
+
+.tool-robot-head {
+    position: relative;
+    width: 260px;
+    height: 280px;
+    background: linear-gradient(180deg, #2a2a45 0%, #1e1e32 100%);
+    border-radius: 40px 40px 60px 60px;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        inset 0 -8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 8px 20px rgba(255, 255, 255, 0.05),
+        0 0 80px rgba(255, 107, 43, 0.25);
+    border: 4px solid var(--color-border);
+    margin: 0 auto;
+}
+
+/* Tool mode glow effect */
+.robot-tool-overlay.active .tool-robot-head {
+    animation: tool-head-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes tool-head-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 15px 40px rgba(0, 0, 0, 0.5),
+            inset 0 -5px 20px rgba(0, 0, 0, 0.3),
+            inset 0 5px 15px rgba(255, 255, 255, 0.05),
+            0 0 60px rgba(255, 107, 43, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 15px 40px rgba(0, 0, 0, 0.5),
+            inset 0 -5px 20px rgba(0, 0, 0, 0.3),
+            inset 0 5px 15px rgba(255, 255, 255, 0.05),
+            0 0 100px rgba(255, 107, 43, 0.4),
+            0 0 150px rgba(255, 107, 43, 0.2);
+    }
+}
+
+/* ============================================================
+   ANTENNA (Tool mode)
+   ============================================================ */
+
+.tool-robot-antenna {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 45px;
+    background: linear-gradient(180deg, var(--color-secondary) 0%, #1e1e32 100%);
+    border-radius: 5px;
+}
+
+.tool-robot-antenna::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle, var(--color-secondary) 30%, var(--color-secondary-dark) 70%);
+    border-radius: 50%;
+    animation: tool-antenna-spin 0.5s linear infinite;
+}
+
+@keyframes tool-antenna-spin {
+    0% {
+        box-shadow: 
+            10px 0 20px var(--color-secondary),
+            -10px 0 5px var(--color-accent-glow);
+    }
+    25% {
+        box-shadow: 
+            0 10px 20px var(--color-secondary),
+            0 -10px 5px var(--color-accent-glow);
+    }
+    50% {
+        box-shadow: 
+            -10px 0 20px var(--color-secondary),
+            10px 0 5px var(--color-accent-glow);
+    }
+    75% {
+        box-shadow: 
+            0 -10px 20px var(--color-secondary),
+            0 10px 5px var(--color-accent-glow);
+    }
+    100% {
+        box-shadow: 
+            10px 0 20px var(--color-secondary),
+            -10px 0 5px var(--color-accent-glow);
+    }
+}
+
+/* ============================================================
+   ROBOT EARS (Tool mode - data flowing)
+   ============================================================ */
+
+.tool-robot-ear {
+    position: absolute;
+    top: 80px;
+    width: 35px;
+    height: 75px;
+    background: linear-gradient(180deg, #3a3a55 0%, #252540 100%);
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.tool-robot-ear-left {
+    left: -38px;
+    border-radius: 14px 6px 6px 14px;
+}
+
+.tool-robot-ear-right {
+    right: -38px;
+    border-radius: 6px 14px 14px 6px;
+}
+
+/* Ear activity lights */
+.tool-robot-ear::before,
+.tool-robot-ear::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.tool-robot-ear::before {
+    top: 14px;
+    background: var(--color-secondary);
+    animation: ear-light-fast 0.2s ease-in-out infinite alternate;
+}
+
+.tool-robot-ear::after {
+    bottom: 14px;
+    background: var(--color-accent);
+    animation: ear-light-fast 0.3s ease-in-out infinite alternate-reverse;
+}
+
+.tool-robot-ear-left::before,
+.tool-robot-ear-left::after {
+    right: 10px;
+}
+
+.tool-robot-ear-right::before,
+.tool-robot-ear-right::after {
+    left: 10px;
+}
+
+@keyframes ear-light-fast {
+    0% {
+        opacity: 0.2;
+        box-shadow: none;
+    }
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 15px currentColor, 0 0 30px currentColor;
+    }
+}
+
+/* ============================================================
+   VISOR DISPLAY (Shows tool input/output)
+   ============================================================ */
+
+.tool-robot-visor {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    right: 20px;
+    height: 160px;
+    background: linear-gradient(180deg, #0a0a14 0%, #0d0d1a 100%);
+    border-radius: 20px;
+    border: 3px solid var(--color-border);
+    box-shadow: 
+        inset 0 4px 20px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 107, 43, 0.2);
+    overflow: hidden;
+}
+
+/* Visor scan line effect */
+.tool-robot-visor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--color-secondary) 50%, 
+        transparent 100%
+    );
+    animation: visor-scan 1.5s linear infinite;
+    z-index: 10;
+}
+
+@keyframes visor-scan {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+/* Visor grid pattern */
+.tool-robot-visor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(rgba(255, 107, 43, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 107, 43, 0.03) 1px, transparent 1px);
+    background-size: 10px 10px;
+    pointer-events: none;
+}
+
+/* Visor content area */
+.tool-visor-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+}
+
+/* Tool name display */
+.tool-visor-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 107, 43, 0.3);
+    margin-bottom: 10px;
+}
+
+.tool-visor-icon {
+    font-size: 20px;
+    animation: tool-icon-rotate 1s ease-in-out infinite;
+}
+
+@keyframes tool-icon-rotate {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-15deg);
+    }
+    75% {
+        transform: rotate(15deg);
+    }
+}
+
+.tool-visor-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 12px var(--color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+/* Input/Output display */
+.tool-visor-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.tool-visor-section {
+    flex: 1;
+    min-height: 0;
+}
+
+.tool-visor-label {
+    font-family: 'SF Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+}
+
+.tool-visor-value {
+    font-family: 'SF Mono', monospace;
+    font-size: 11px;
+    color: var(--color-text);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 8px;
+    border-radius: 4px;
+    max-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-left: 3px solid var(--color-secondary);
+}
+
+.tool-visor-value.output {
+    border-left-color: var(--color-accent);
+}
+
+.tool-visor-value.error {
+    border-left-color: #ff4444;
+    color: #ff6666;
+}
+
+/* Data streaming animation */
+.tool-visor-value.streaming::after {
+    content: '█';
+    animation: cursor-blink 0.5s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+/* ============================================================
+   ROBOT ARMS (Tool using animation)
+   ============================================================ */
+
+.tool-robot-arms {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 80px;
+}
+
+.tool-robot-arm {
+    position: absolute;
+    bottom: 0;
+    width: 24px;
+    height: 70px;
+    background: linear-gradient(180deg, #3a3a55 0%, #252540 100%);
+    border-radius: 10px;
+    transform-origin: top center;
+}
+
+.tool-robot-arm-left {
+    left: 30px;
+    animation: arm-work-left 0.8s ease-in-out infinite;
+}
+
+.tool-robot-arm-right {
+    right: 30px;
+    animation: arm-work-right 0.8s ease-in-out infinite 0.4s;
+}
+
+/* Robot hands with tools */
+.tool-robot-arm::after {
+    content: '🔧';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+}
+
+.tool-robot-arm-left::after {
+    content: '🔧';
+}
+
+.tool-robot-arm-right::after {
+    content: '⚙️';
+}
+
+@keyframes arm-work-left {
+    0%, 100% {
+        transform: rotate(-20deg);
+    }
+    50% {
+        transform: rotate(20deg);
+    }
+}
+
+@keyframes arm-work-right {
+    0%, 100% {
+        transform: rotate(20deg);
+    }
+    50% {
+        transform: rotate(-20deg);
+    }
+}
+
+/* ============================================================
+   TOOL SPARKS
+   ============================================================ */
+
+.tool-sparks {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 50px;
+    pointer-events: none;
+}
+
+.tool-spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    animation: spark-fly 0.6s ease-out infinite;
+}
+
+.tool-spark:nth-child(1) { left: 20%; animation-delay: 0s; }
+.tool-spark:nth-child(2) { left: 35%; animation-delay: 0.1s; }
+.tool-spark:nth-child(3) { left: 50%; animation-delay: 0.2s; }
+.tool-spark:nth-child(4) { left: 65%; animation-delay: 0.3s; }
+.tool-spark:nth-child(5) { left: 80%; animation-delay: 0.4s; }
+
+@keyframes spark-fly {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-30px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ============================================================
+   STATUS TEXT
+   ============================================================ */
+
+.tool-status {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.tool-status-text {
+    font-size: 1rem;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.tool-status-text .tool-name {
+    color: var(--color-secondary);
+    font-family: 'SF Mono', monospace;
+    font-weight: 600;
+}
+
+.tool-progress-bar {
+    width: 280px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+.tool-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+    width: 0%;
+    animation: progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-indeterminate {
+    0% {
+        width: 0%;
+        margin-left: 0%;
+    }
+    50% {
+        width: 60%;
+        margin-left: 20%;
+    }
+    100% {
+        width: 0%;
+        margin-left: 100%;
+    }
+}
+
+/* Completed state */
+.robot-tool-overlay.completed .tool-progress-fill {
+    animation: none;
+    width: 100%;
+    margin-left: 0;
+}
+
+.robot-tool-overlay.completed .tool-robot-arm {
+    animation: none;
+    transform: rotate(0deg);
+}
+
+.robot-tool-overlay.completed .tool-robot-antenna::before {
+    animation: none;
+    box-shadow: 0 0 30px var(--color-accent), 0 0 60px var(--color-accent);
+}
+
+/* Error state */
+.robot-tool-overlay.error .tool-progress-fill {
+    background: linear-gradient(90deg, #ff4444, #ff6666);
+}
+
+.robot-tool-overlay.error .tool-robot-head {
+    animation: error-shake 0.3s ease-in-out;
+}
+
+@keyframes error-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .tool-robot-arm,
+    .tool-robot-antenna::before,
+    .tool-visor-content::before,
+    .tool-spark,
+    .tool-progress-fill {
+        animation: none;
+    }
+    
+    .tool-progress-fill {
+        width: 50%;
+    }
+}

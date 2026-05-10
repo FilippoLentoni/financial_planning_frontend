@@ -1,0 +1,99 @@
+/* Token Audit Panel */
+.token-audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.token-audit-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text-muted);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.token-audit-table th:not(:first-child) {
+    text-align: right;
+}
+
+.token-audit-group-header td {
+    padding: 0.625rem 0.75rem 0.25rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    font-size: 0.8125rem;
+    border-top: 1px solid var(--color-border);
+    cursor: pointer;
+}
+
+.token-audit-group-header td .toggle-icon {
+    display: inline-block;
+    width: 1em;
+    transition: transform 0.2s;
+}
+
+.token-audit-group-header.collapsed td .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.token-audit-row td {
+    padding: 0.375rem 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.token-audit-row td:not(:first-child) {
+    text-align: right;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.75rem;
+}
+
+.token-audit-row.hidden-row {
+    display: none;
+}
+
+.token-audit-row td:first-child {
+    padding-left: 1.75rem;
+    color: var(--color-text-muted);
+}
+
+.token-audit-summary td {
+    padding: 0.625rem 0.75rem;
+    font-weight: 600;
+    border-top: 2px solid var(--color-secondary);
+    color: var(--color-text);
+}
+
+.token-audit-summary td:not(:first-child) {
+    text-align: right;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    color: var(--color-secondary);
+}
+
+.token-audit-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-muted);
+}
+
+.token-audit-type-badge {
+    display: inline-block;
+    font-size: 0.625rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.token-audit-type-badge.parent {
+    background: rgba(255, 170, 51, 0.15);
+    color: var(--color-accent);
+}
+
+.token-audit-type-badge.worker {
+    background: rgba(255, 107, 43, 0.15);
+    color: var(--color-secondary);
+}

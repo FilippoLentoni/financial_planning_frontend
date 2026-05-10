@@ -1,0 +1,385 @@
+/**
+ * Tool Use Component Styles - Clean Minimal Theme (v2)
+ * 
+ * Matches the clean, light Agentic v2 design.
+ */
+
+/* Tool Use Container */
+.tool-use-container {
+    margin: 0.75rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray-border);
+    background: var(--white);
+    transition: border-color 0.2s ease;
+}
+
+.tool-use-container:hover {
+    border-color: var(--gray-text);
+}
+
+/* Tool Use Header */
+.tool-use-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--gray-border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tool-use-header:hover {
+    background: var(--selected-bg);
+}
+
+.tool-use-info {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.tool-use-icon {
+    font-size: 1rem;
+    filter: none;
+}
+
+.tool-use-name {
+    font-family: "SF Compact Text", sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--squid-ink-dark);
+}
+
+.tool-use-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 16px;
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Status Variants */
+.tool-use-status.pending {
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--gray-text);
+    border: 1px solid var(--gray-border);
+}
+
+.tool-use-status.pending::before {
+    content: '○';
+    font-size: 0.625rem;
+}
+
+.tool-use-status.executing {
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--squid-ink-dark);
+    border: 1px solid var(--gray-border);
+}
+
+.tool-use-status.executing::before {
+    content: '◉';
+    font-size: 0.625rem;
+}
+
+.tool-use-status.completed {
+    background: rgba(45, 211, 111, 0.1);
+    color: var(--color-success);
+    border: 1px solid rgba(45, 211, 111, 0.3);
+}
+
+.tool-use-status.completed::before {
+    content: '✓';
+    font-size: 0.625rem;
+}
+
+.tool-use-status.error {
+    background: rgba(255, 59, 48, 0.1);
+    color: var(--color-error);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.tool-use-status.error::before {
+    content: '✕';
+    font-size: 0.625rem;
+}
+
+.tool-use-status.denied {
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--gray-text);
+    border: 1px solid var(--gray-border);
+}
+
+.tool-use-status.denied::before {
+    content: '⊘';
+    font-size: 0.625rem;
+}
+
+/* Expand/Collapse Toggle */
+.tool-use-toggle {
+    font-size: 0.75rem;
+    color: var(--gray-text);
+    transition: transform 0.2s ease;
+}
+
+.tool-use-container.expanded .tool-use-toggle {
+    transform: rotate(180deg);
+    color: var(--squid-ink-dark);
+}
+
+/* Tool Use Body */
+.tool-use-body {
+    display: none;
+    padding: 0;
+}
+
+.tool-use-container.expanded .tool-use-body {
+    display: block;
+}
+
+/* Input Section */
+.tool-use-input {
+    padding: 1rem;
+    background: var(--light-bg);
+    border-bottom: 1px solid var(--gray-border);
+}
+
+.tool-use-input-label {
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.tool-use-input-content {
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--squid-ink-dark);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.75rem;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+}
+
+/* Result Section */
+.tool-use-result {
+    padding: 1rem;
+}
+
+.tool-use-result-label {
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-success);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.tool-use-result-content {
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--squid-ink-dark);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 0.75rem;
+    background: var(--light-bg);
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+}
+
+.tool-use-result-content.error {
+    background: rgba(255, 59, 48, 0.05);
+    border-color: rgba(255, 59, 48, 0.3);
+    color: var(--color-error);
+}
+
+/* Tool Approval Dialog */
+.tool-approval-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tool-approval-dialog {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0px 4px 16px 0px rgba(9, 10, 13, 0.15);
+    max-width: 520px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    border: 1px solid var(--gray-border);
+}
+
+.tool-approval-header {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.tool-approval-header span {
+    font-size: 1.25rem;
+}
+
+.tool-approval-header h4 {
+    margin: 0;
+    font-family: "Libre Baskerville", serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--squid-ink-dark);
+}
+
+.tool-approval-content {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+.tool-approval-content p {
+    margin: 0 0 1rem;
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.875rem;
+    color: var(--gray-text);
+}
+
+.tool-approval-info {
+    background: var(--light-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--gray-border);
+}
+
+.tool-approval-info .tool-name {
+    font-family: "SF Compact Text", sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--squid-ink-dark);
+}
+
+.tool-approval-info strong {
+    display: block;
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.75rem;
+    color: var(--gray-text);
+    margin-bottom: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tool-approval-info pre {
+    margin: 0;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 0.75rem;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+    color: var(--squid-ink-dark);
+}
+
+.tool-approval-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--light-bg);
+    border-top: 1px solid var(--gray-border);
+}
+
+.tool-approval-btn {
+    padding: 0.75rem 1rem;
+    font-family: "SF Compact Text", sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    border: none;
+}
+
+.tool-approval-btn::before {
+    display: none;
+}
+
+.tool-approval-btn:hover::before {
+    display: none;
+}
+
+.tool-approval-btn.approve {
+    background: var(--squid-ink-dark);
+    color: var(--white);
+}
+
+.tool-approval-btn.approve:hover {
+    opacity: 0.9;
+    transform: none;
+    box-shadow: none;
+}
+
+.tool-approval-btn.deny {
+    background: var(--color-error);
+    color: var(--white);
+}
+
+.tool-approval-btn.deny:hover {
+    opacity: 0.9;
+    transform: none;
+    box-shadow: none;
+}
+
+.tool-approval-btn.secondary {
+    background: var(--white);
+    color: var(--squid-ink-dark);
+    border: 1px solid var(--gray-border);
+}
+
+.tool-approval-btn.secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--gray-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tool-approval-actions {
+        grid-template-columns: 1fr;
+    }
+}

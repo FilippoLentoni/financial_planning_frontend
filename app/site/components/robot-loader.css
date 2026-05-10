@@ -1,0 +1,648 @@
+/**
+ * Robot Loader Animation
+ * 
+ * Animated robot with chomping mouth and binary text flowing through ears
+ */
+
+/* ============================================================
+   ROBOT LOADER OVERLAY
+   ============================================================ */
+
+.robot-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg);
+    background-image: 
+        radial-gradient(ellipse at 50% 30%, rgba(255, 107, 43, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(255, 170, 51, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 107, 43, 0.08) 0%, transparent 40%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.robot-loader-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.robot-loader-overlay.hidden {
+    display: none;
+}
+
+/* ============================================================
+   ROBOT CONTAINER
+   ============================================================ */
+
+.robot-loader-container {
+    position: relative;
+    width: 280px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Binary streams container */
+.binary-streams {
+    position: absolute;
+    width: 400px;
+    height: 200px;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Left ear binary stream - flowing INTO the left ear */
+.binary-stream-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: flow-left-to-ear 2.5s linear infinite;
+}
+
+/* Right ear binary stream - flowing OUT OF the right ear */
+.binary-stream-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: flow-right-from-ear 2.5s linear infinite;
+}
+
+.binary-char {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-secondary);
+    text-shadow: 0 0 8px var(--color-accent-glow), 0 0 20px rgba(255, 107, 43, 0.3);
+    opacity: 0;
+    animation: binary-glow 0.3s ease-out forwards;
+}
+
+.binary-char:nth-child(1) { animation-delay: 0s; }
+.binary-char:nth-child(2) { animation-delay: 0.05s; }
+.binary-char:nth-child(3) { animation-delay: 0.1s; }
+.binary-char:nth-child(4) { animation-delay: 0.15s; }
+.binary-char:nth-child(5) { animation-delay: 0.2s; }
+.binary-char:nth-child(6) { animation-delay: 0.25s; }
+.binary-char:nth-child(7) { animation-delay: 0.3s; }
+.binary-char:nth-child(8) { animation-delay: 0.35s; }
+
+@keyframes flow-left-to-ear {
+    0% {
+        transform: translateY(-50%) translateX(-150px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50%) translateX(120px);
+        opacity: 0;
+    }
+}
+
+@keyframes flow-right-from-ear {
+    0% {
+        transform: translateY(-50%) translateX(150px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50%) translateX(-120px);
+        opacity: 0;
+    }
+}
+
+@keyframes binary-glow {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Multiple binary streams with different delays */
+.binary-stream-left.stream-2 { animation-delay: 0.8s; top: 35%; }
+.binary-stream-left.stream-3 { animation-delay: 1.6s; top: 65%; }
+.binary-stream-right.stream-2 { animation-delay: 0.8s; top: 35%; }
+.binary-stream-right.stream-3 { animation-delay: 1.6s; top: 65%; }
+
+/* ============================================================
+   ROBOT HEAD
+   ============================================================ */
+
+.robot-head {
+    position: relative;
+    width: 140px;
+    height: 160px;
+    background: linear-gradient(180deg, #2a2a45 0%, #1e1e32 100%);
+    border-radius: 25px 25px 35px 35px;
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.5),
+        inset 0 -5px 20px rgba(0, 0, 0, 0.3),
+        inset 0 5px 15px rgba(255, 255, 255, 0.05),
+        0 0 60px rgba(255, 107, 43, 0.15);
+    border: 2px solid var(--color-border);
+}
+
+/* Face plate glow */
+.robot-head::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 50px;
+    background: linear-gradient(180deg, rgba(255, 107, 43, 0.05) 0%, transparent 100%);
+    border-radius: 20px 20px 15px 15px;
+}
+
+/* ============================================================
+   ANTENNA
+   ============================================================ */
+
+.robot-antenna {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 30px;
+    background: linear-gradient(180deg, var(--color-secondary) 0%, #1e1e32 100%);
+    border-radius: 3px;
+}
+
+.robot-antenna::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle, var(--color-secondary) 30%, var(--color-secondary-dark) 70%);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 20px var(--color-secondary),
+        0 0 40px var(--color-accent-glow);
+    animation: antenna-pulse 1s ease-in-out infinite;
+}
+
+@keyframes antenna-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px var(--color-secondary),
+            0 0 40px var(--color-accent-glow);
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px var(--color-secondary),
+            0 0 60px var(--color-accent-glow),
+            0 0 80px rgba(255, 107, 43, 0.3);
+        transform: translateX(-50%) scale(1.2);
+    }
+}
+
+/* ============================================================
+   EARS
+   ============================================================ */
+
+.robot-ear {
+    position: absolute;
+    top: 50px;
+    width: 20px;
+    height: 45px;
+    background: linear-gradient(180deg, #3a3a55 0%, #252540 100%);
+    border-radius: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.robot-ear-left {
+    left: -22px;
+    border-radius: 8px 3px 3px 8px;
+}
+
+.robot-ear-right {
+    right: -22px;
+    border-radius: 3px 8px 8px 3px;
+}
+
+/* Ear lights */
+.robot-ear::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    animation: ear-blink 0.5s ease-in-out infinite alternate;
+}
+
+.robot-ear-left::before {
+    right: 5px;
+}
+
+.robot-ear-right::before {
+    left: 5px;
+}
+
+.robot-ear::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    animation: ear-blink 0.5s ease-in-out infinite alternate-reverse;
+}
+
+.robot-ear-left::after {
+    right: 5px;
+}
+
+.robot-ear-right::after {
+    left: 5px;
+}
+
+@keyframes ear-blink {
+    0% {
+        opacity: 0.3;
+        box-shadow: none;
+    }
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 10px currentColor;
+    }
+}
+
+/* ============================================================
+   EYES
+   ============================================================ */
+
+.robot-eyes {
+    position: absolute;
+    top: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 25px;
+}
+
+.robot-eye {
+    width: 35px;
+    height: 35px;
+    background: #0d0d14;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        inset 0 3px 10px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(255, 107, 43, 0.2);
+}
+
+/* Eye glow background */
+.robot-eye::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle, var(--color-secondary) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: eye-glow 2s ease-in-out infinite;
+}
+
+/* Eye pupil */
+.robot-eye::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--color-secondary);
+    animation: eye-scan 3s ease-in-out infinite;
+}
+
+@keyframes eye-glow {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes eye-scan {
+    0%, 100% {
+        transform: translate(-50%, -50%);
+    }
+    25% {
+        transform: translate(-30%, -50%);
+    }
+    50% {
+        transform: translate(-50%, -30%);
+    }
+    75% {
+        transform: translate(-70%, -50%);
+    }
+}
+
+/* ============================================================
+   CHOMPING MOUTH
+   ============================================================ */
+
+.robot-mouth-container {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 35px;
+    perspective: 200px;
+}
+
+/* Upper jaw (static) */
+.robot-mouth-upper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d14 100%);
+    border-radius: 8px 8px 0 0;
+    border: 2px solid var(--color-border);
+    border-bottom: none;
+    z-index: 2;
+}
+
+/* Upper teeth */
+.robot-mouth-upper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+    right: 5px;
+    height: 8px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-text) 0px,
+        var(--color-text) 6px,
+        transparent 6px,
+        transparent 10px
+    );
+    border-radius: 0 0 2px 2px;
+}
+
+/* Lower jaw (animated - chomping) */
+.robot-mouth-lower {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(0deg, #1a1a2e 0%, #0d0d14 100%);
+    border-radius: 0 0 12px 12px;
+    border: 2px solid var(--color-border);
+    border-top: none;
+    transform-origin: bottom center;
+    animation: chomp 0.4s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Lower teeth */
+.robot-mouth-lower::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5px;
+    right: 5px;
+    height: 8px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-text) 0px,
+        var(--color-text) 6px,
+        transparent 6px,
+        transparent 10px
+    );
+    border-radius: 2px 2px 0 0;
+}
+
+/* Mouth interior glow */
+.robot-mouth-interior {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(255, 107, 43, 0.6) 0%, rgba(255, 50, 0, 0.3) 50%, transparent 100%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: mouth-glow 0.4s ease-in-out infinite;
+}
+
+@keyframes chomp {
+    0%, 100% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(-25deg);
+    }
+}
+
+@keyframes mouth-glow {
+    0%, 100% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scaleY(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scaleY(1.3);
+    }
+}
+
+/* ============================================================
+   LOADING TEXT
+   ============================================================ */
+
+.robot-loader-text {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.robot-loader-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    animation: title-glow 2s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px var(--color-accent-glow));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px var(--color-accent-glow));
+    }
+}
+
+.robot-loader-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 2px;
+    animation: subtitle-fade 1.5s ease-in-out infinite;
+}
+
+@keyframes subtitle-fade {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Progress dots */
+.robot-loader-dots {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 4px;
+}
+
+.robot-loader-dots span {
+    width: 6px;
+    height: 6px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    animation: dot-bounce 1.2s ease-in-out infinite;
+}
+
+.robot-loader-dots span:nth-child(1) { animation-delay: 0s; }
+.robot-loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+.robot-loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   FLOATING PARTICLES
+   ============================================================ */
+
+.robot-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.robot-particle {
+    position: absolute;
+    font-family: 'SF Mono', monospace;
+    font-size: 12px;
+    color: var(--color-secondary);
+    opacity: 0;
+    animation: float-particle 4s linear infinite;
+}
+
+.robot-particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+.robot-particle:nth-child(2) { left: 25%; animation-delay: 0.8s; }
+.robot-particle:nth-child(3) { left: 40%; animation-delay: 1.6s; }
+.robot-particle:nth-child(4) { left: 55%; animation-delay: 2.4s; }
+.robot-particle:nth-child(5) { left: 70%; animation-delay: 3.2s; }
+.robot-particle:nth-child(6) { left: 85%; animation-delay: 0.4s; }
+.robot-particle:nth-child(7) { left: 15%; animation-delay: 1.2s; }
+.robot-particle:nth-child(8) { left: 60%; animation-delay: 2s; }
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .robot-mouth-lower,
+    .robot-antenna::before,
+    .robot-eye::after,
+    .binary-stream-left,
+    .binary-stream-right,
+    .robot-particle {
+        animation: none;
+    }
+    
+    .robot-loader-dots span {
+        animation: none;
+        opacity: 1;
+    }
+}
