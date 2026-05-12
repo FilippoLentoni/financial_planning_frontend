@@ -47,6 +47,7 @@ def test_frontend_uses_backend_runtime_configuration() -> None:
     assert "_cleanConfigValue" in runtime
     assert "Built runtime endpoint from ARN" in runtime
     assert "invalid AgentCore endpoint" in runtime
+    assert "isDirectRuntimeEndpoint &&" in runtime
     assert "bedrock:InvokeModel" not in stack
     assert "bedrock:InvokeModelWithResponseStream" not in stack
     assert "Direct browser Bedrock model invocation is disabled" in bedrock
