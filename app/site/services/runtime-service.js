@@ -207,7 +207,8 @@
             if (callbacks.onError) callbacks.onError(err);
             return Promise.reject(err);
         }
-        if (this._runtimeEndpoint && !/^https:\/\/bedrock-agentcore\.[a-z0-9-]+\.amazonaws\.com\/runtimes\/[^/]+\/endpoints\/[^/]+\/invoke$/.test(this._runtimeEndpoint)) {
+        var isDirectRuntimeEndpoint = !this.restUrl && this._isRealValue(this._runtimeEndpoint);
+        if (isDirectRuntimeEndpoint && !/^https:\/\/bedrock-agentcore\.[a-z0-9-]+\.amazonaws\.com\/runtimes\/[^/]+\/endpoints\/[^/]+\/invoke$/.test(this._runtimeEndpoint)) {
             var endpointErr = new Error('RuntimeService has invalid AgentCore endpoint: ' + this._runtimeEndpoint);
             if (callbacks.onError) callbacks.onError(endpointErr);
             return Promise.reject(endpointErr);
@@ -232,7 +233,6 @@
             prompt: userMessage
         };
 
-        var isDirectRuntimeEndpoint = !this.restUrl && this._isRealValue(this._runtimeEndpoint);
         var requestBody = isDirectRuntimeEndpoint
             ? runtimePayload
             : {
