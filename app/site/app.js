@@ -101,6 +101,18 @@
             <button class="tab-btn" data-tab="workflows" role="tab" aria-selected="false">Reviews</button>\
         </div>\
         <section class="tab-content active" id="tab-chat">\
+            <section class="model-run-panel" id="modelRunPanel" aria-live="polite">\
+                <div class="model-run-panel-header">\
+                    <div>\
+                        <h2>Latest Model Run</h2>\
+                        <p id="modelRunSubtitle">Loading model run metadata...</p>\
+                    </div>\
+                    <button class="btn-icon btn-sm" id="refreshModelRunsBtn" title="Refresh model run metadata">↻</button>\
+                </div>\
+                <div class="model-run-grid" id="modelRunMetadata">\
+                    <div class="model-run-empty">Waiting for the latest input and run.</div>\
+                </div>\
+            </section>\
             <section class="chat-section" id="chatSection">\
                 <div id="chatbot-container"></div>\
             </section>\
@@ -266,6 +278,10 @@
         elements.darkModeToggle = document.getElementById('darkModeToggle');
         elements.conversationList = document.getElementById('conversationList');
         elements.newChatBtn = document.getElementById('newChatBtn');
+        elements.modelRunPanel = document.getElementById('modelRunPanel');
+        elements.modelRunSubtitle = document.getElementById('modelRunSubtitle');
+        elements.modelRunMetadata = document.getElementById('modelRunMetadata');
+        elements.refreshModelRunsBtn = document.getElementById('refreshModelRunsBtn');
     }
 
     // ============================================================
@@ -344,6 +360,7 @@
         initBedrockCredentials().then(function() {
             console.log('[App] IAM credentials initialized successfully');
             loadGateways();
+            loadModelRuns();
             loadConversations();
             updateConnectionStatus();
             // Initialize chatbot with auth (loads models proactively)
@@ -355,6 +372,7 @@
             console.error('[App] This may cause MCP gateway authentication to fail');
             // Still try to load gateways - they may work with fallback auth
             loadGateways();
+            loadModelRuns();
             loadConversations();
             updateConnectionStatus();
         });
@@ -439,6 +457,61 @@
         setTimeout(function() {
             if (errorDiv.parentNode) errorDiv.parentNode.removeChild(errorDiv);
         }, 5000);
+    }
+
+    function formatCurrency(value) {
+        if (value === null || value === undefined || value === '') return 'n/a';
+        return '$' + Number(value).toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+    }
+
+    function renderModelRunMetadata(run) {
+        if (!elements.modelRunMetadata || !elements.modelRunSubtitle) return;
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        if (!run) {
+            window.SecurityUtils.setTextContent(elements.modelRunSubtitle, 'No model run available yet.');
+            elements.modelRunMetadata.innerHTML = '<div class="model-run-empty">No input/run pair has been created.</div>';
+            return;
+        }
+
+        var created = run.createdAtIso || 'unknown time';
+        var modelId = run.modelUsed && run.modelUsed.modelId ? run.modelUsed.modelId : 'backend default';
+        window.SecurityUtils.setTextContent(
+            elements.modelRunSubtitle,
+            (run.description || 'Portfolio planning run') + ' • ' + created
+        );
+        elements.modelRunMetadata.innerHTML = '\
+            <div class="model-run-field"><span>Input ID</span><code>' + escapeHtml(run.input_id || 'n/a') + '</code></div>\
+            <div class="model-run-field"><span>Run ID</span><code>' + escapeHtml(run.run_id || 'n/a') + '</code></div>\
+            <div class="model-run-field"><span>As of</span><strong>' + escapeHtml(run.asOfDate || 'n/a') + '</strong></div>\
+            <div class="model-run-field"><span>Portfolio</span><strong>' + escapeHtml(run.portfolioId || 'n/a') + '</strong></div>\
+            <div class="model-run-field"><span>Risk</span><strong>' + escapeHtml(run.riskTarget || 'n/a') + '</strong></div>\
+            <div class="model-run-field"><span>Expected W16</span><strong>' + escapeHtml(formatCurrency(run.expectedValueAtWeek16)) + '</strong></div>\
+            <div class="model-run-field"><span>Return</span><strong>' + escapeHtml((run.expectedReturnPct16w || 0) + '%') + '</strong></div>\
+            <div class="model-run-field"><span>Model</span><code>' + escapeHtml(modelId) + '</code></div>';
+    }
+
+    function loadModelRuns() {
+        if (!elements.modelRunMetadata || !window.RuntimeService || !window.RuntimeService.invokeBackendApi) return;
+        if (elements.refreshModelRunsBtn) elements.refreshModelRunsBtn.disabled = true;
+        window.RuntimeService.invokeBackendApi('GET', '/planning/runs')
+            .then(function(data) {
+                renderModelRunMetadata(data.latest);
+            })
+            .catch(function(error) {
+                console.error('[App] Failed to load model run metadata:', error);
+                if (elements.modelRunSubtitle) {
+                    window.SecurityUtils.setTextContent(elements.modelRunSubtitle, 'Model run metadata unavailable.');
+                }
+                if (elements.modelRunMetadata) {
+                    elements.modelRunMetadata.innerHTML = '<div class="model-run-empty">Unable to load the latest run metadata.</div>';
+                }
+            })
+            .finally(function() {
+                if (elements.refreshModelRunsBtn) elements.refreshModelRunsBtn.disabled = false;
+            });
     }
 
     // ============================================================
@@ -1321,6 +1394,9 @@
         }
         if (elements.refreshGatewaysBtn) {
             elements.refreshGatewaysBtn.addEventListener('click', loadGateways);
+        }
+        if (elements.refreshModelRunsBtn) {
+            elements.refreshModelRunsBtn.addEventListener('click', loadModelRuns);
         }
         if (elements.newChatBtn) {
             elements.newChatBtn.addEventListener('click', handleNewChat);
