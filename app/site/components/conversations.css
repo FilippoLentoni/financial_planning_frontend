@@ -79,11 +79,11 @@
 }
 
 .conversation-item:hover {
-    background: var(--hover-bg, #f0f0f0);
+    background: var(--bg-secondary, #f0f0f0);
 }
 
 .conversation-item.active {
-    background: var(--active-bg, #e8f0fe);
+    background: var(--selected-bg, #e8f0fe);
 }
 
 .conversation-item-content {
@@ -95,7 +95,7 @@
 .conversation-item-title {
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--text-primary, #333);
+    color: var(--squid-ink-dark, #333);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -103,7 +103,7 @@
 }
 
 .conversation-item.active .conversation-item-title {
-    color: var(--primary-color, #0073bb);
+    color: var(--color-accent, #0073bb);
     font-weight: 600;
 }
 
@@ -112,7 +112,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.65rem;
-    color: var(--text-tertiary, #999);
+    color: var(--gray-text, #999);
     margin-top: 2px;
 }
 
@@ -122,6 +122,11 @@
 
 .conversation-item-count {
     white-space: nowrap;
+}
+
+.conversation-item-resume {
+    white-space: nowrap;
+    color: var(--color-accent, #0073bb);
 }
 
 /* Delete button on hover */

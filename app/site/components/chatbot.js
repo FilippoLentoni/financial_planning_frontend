@@ -61,7 +61,7 @@
         };
         this.toolApprovals = {}; // toolName -> 'auto_approve' | 'always_deny' | 'require_approval'
         this.shouldStop = false;
-        
+
         // Callbacks
         this.onToolApproval = options.onToolApproval || null;
         this.getAccessToken = options.getAccessToken || function() { return null; };
@@ -121,27 +121,9 @@
                 <div class="chatbot-header">\
                     <h3>Financial Planning Chat</h3>\
                     <div class="chatbot-controls">\
-                        <div class="orchestrator-toggle" id="orchestrator-toggle" title="Enable multi-agent orchestration mode">\
-                            <span class="orchestrator-toggle-label">🎭 Orchestrator</span>\
-                            <div class="orchestrator-toggle-switch" id="orchestrator-switch"></div>\
-                            <span class="orchestrator-toggle-count" id="orchestrator-count"></span>\
-                        </div>\
                         <select class="model-selector" id="chatbot-model-selector" title="Select AI Model">\
                             <option value="backend-default">Loading models...</option>\
                         </select>\
-                        <button class="btn-icon" id="chatbot-tools-btn" title="View MCP Tools">🔧 Tools</button>\
-                        <button class="btn-icon" id="chatbot-servers-btn" title="MCP Servers">🌐 Servers</button>\
-                        <button class="btn-icon" id="chatbot-clear-btn" title="Clear Conversation">🗑️</button>\
-                    </div>\
-                </div>\
-                <!-- Orchestrator Status Bar -->\
-                <div class="orchestrator-status-bar" id="orchestrator-status-bar">\
-                    <div class="orchestrator-status-info">\
-                        <div class="orchestrator-status-badge">\
-                            <span class="icon">🎭</span>\
-                            <span>Orchestrator Mode</span>\
-                        </div>\
-                        <div class="orchestrator-workers-list" id="orchestrator-workers-list"></div>\
                     </div>\
                 </div>\
                 <div class="chatbot-status" id="chatbot-status">\
@@ -154,21 +136,6 @@
                         <p>Create 16-week synthetic portfolio plans, analyze liquidity risk, and prepare weekly review reports.</p>\
                         <p>Start with: create a moderate 16-week plan for my demo portfolio.</p>\
                     </div>\
-                </div>\
-                <div class="chatbot-token-usage" id="chatbot-token-usage">\
-                    <span class="token-usage-label">📊 Token Usage:</span>\
-                    <span class="token-usage-item">\
-                        <span class="token-label">Input:</span>\
-                        <span class="token-value" id="token-input">0</span>\
-                    </span>\
-                    <span class="token-usage-item">\
-                        <span class="token-label">Output:</span>\
-                        <span class="token-value" id="token-output">0</span>\
-                    </span>\
-                    <span class="token-usage-item token-total">\
-                        <span class="token-label">Total:</span>\
-                        <span class="token-value" id="token-total">0</span>\
-                    </span>\
                 </div>\
                 <div class="chatbot-input-area">\
                     <form class="chatbot-input-form" id="chatbot-form">\
@@ -318,45 +285,59 @@
             self.handleStop();
         });
         
-        // Clear button
-        this.elements.clearBtn.addEventListener('click', function() {
-            self.clearConversation();
-        });
+        // Optional header controls. The financial planning shell keeps these hidden by default.
+        if (this.elements.clearBtn) {
+            this.elements.clearBtn.addEventListener('click', function() {
+                self.clearConversation();
+            });
+        }
         
-        // Tools panel
-        this.elements.toolsBtn.addEventListener('click', function() {
-            self.showToolsPanel();
-        });
+        if (this.elements.toolsBtn) {
+            this.elements.toolsBtn.addEventListener('click', function() {
+                self.showToolsPanel();
+            });
+        }
         
-        this.elements.toolsPanelClose.addEventListener('click', function() {
-            self.hideToolsPanel();
-        });
-        
-        this.elements.toolsPanel.addEventListener('click', function(e) {
-            if (e.target === self.elements.toolsPanel) {
+        if (this.elements.toolsPanelClose) {
+            this.elements.toolsPanelClose.addEventListener('click', function() {
                 self.hideToolsPanel();
-            }
-        });
+            });
+        }
         
-        // Servers panel
-        this.elements.serversBtn.addEventListener('click', function() {
-            self.showServersPanel();
-        });
+        if (this.elements.toolsPanel) {
+            this.elements.toolsPanel.addEventListener('click', function(e) {
+                if (e.target === self.elements.toolsPanel) {
+                    self.hideToolsPanel();
+                }
+            });
+        }
         
-        this.elements.serversPanelClose.addEventListener('click', function() {
-            self.hideServersPanel();
-        });
+        if (this.elements.serversBtn) {
+            this.elements.serversBtn.addEventListener('click', function() {
+                self.showServersPanel();
+            });
+        }
         
-        this.elements.serversPanel.addEventListener('click', function(e) {
-            if (e.target === self.elements.serversPanel) {
+        if (this.elements.serversPanelClose) {
+            this.elements.serversPanelClose.addEventListener('click', function() {
                 self.hideServersPanel();
-            }
-        });
+            });
+        }
+
+        if (this.elements.serversPanel) {
+            this.elements.serversPanel.addEventListener('click', function(e) {
+                if (e.target === self.elements.serversPanel) {
+                    self.hideServersPanel();
+                }
+            });
+        }
         
         // Model selector
-        this.elements.modelSelector.addEventListener('change', function() {
-            self.handleModelChange(self.elements.modelSelector.value);
-        });
+        if (this.elements.modelSelector) {
+            this.elements.modelSelector.addEventListener('change', function() {
+                self.handleModelChange(self.elements.modelSelector.value);
+            });
+        }
         
         // Tool approval buttons
         this.elements.approvalApprove.addEventListener('click', function() {
@@ -2523,6 +2504,7 @@
      * Show tools panel
      */
     ChatbotComponent.prototype.showToolsPanel = function() {
+        if (!this.elements.toolsPanel || !this.elements.toolsPanelContent) return;
         var tools = window.MCPService ? window.MCPService.getAllTools() : [];
         
         if (tools.length === 0) {
@@ -2547,6 +2529,7 @@
      * Hide tools panel
      */
     ChatbotComponent.prototype.hideToolsPanel = function() {
+        if (!this.elements.toolsPanel) return;
         this.elements.toolsPanel.classList.add('hidden');
     };
 
@@ -2554,6 +2537,7 @@
      * Show servers panel
      */
     ChatbotComponent.prototype.showServersPanel = function() {
+        if (!this.elements.serversPanel || !this.elements.serversPanelContent) return;
         var self = this;
         var gateways = this.getGatewaysList();
         
@@ -2629,6 +2613,7 @@
      * Hide servers panel
      */
     ChatbotComponent.prototype.hideServersPanel = function() {
+        if (!this.elements.serversPanel) return;
         this.elements.serversPanel.classList.add('hidden');
     };
 
@@ -2785,7 +2770,7 @@
      */
     ChatbotComponent.prototype.updateServersList = function() {
         // Re-render if panel is open
-        if (!this.elements.serversPanel.classList.contains('hidden')) {
+        if (this.elements.serversPanel && !this.elements.serversPanel.classList.contains('hidden')) {
             this.showServersPanel();
         }
     };
