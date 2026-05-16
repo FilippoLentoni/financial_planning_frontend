@@ -348,6 +348,7 @@
         // Otherwise underscores in URLs (for example, generated_report_FL_20260226.xlsx) get
         // interpreted as italic markers and corrupt the URL
         var urlPlaceholders = [];
+        var identifierPlaceholders = [];
         
         // Protect markdown links [text](url) first
         text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(match, linkText, url) {
@@ -384,8 +385,17 @@
             urlPlaceholders.push(replacement);
             return '\x00URL' + index + '\x00';
         });
+
+        // Protect machine identifiers before bold/italic parsing. AgentCore tool names
+        // such as portfolio-planning___get_math_model_input intentionally contain
+        // underscores, which otherwise look like markdown emphasis delimiters.
+        text = text.replace(/\b[a-zA-Z0-9-]+___[a-zA-Z0-9_-]+\b/g, function(identifier) {
+            var index = identifierPlaceholders.length;
+            identifierPlaceholders.push('<code class="md-inline-code">' + identifier + '</code>');
+            return '\x00IDENTIFIER' + index + '\x00';
+        });
         
-        // Now safe to apply bold/italic — URLs are protected as placeholders
+        // Now safe to apply bold/italic — URLs and identifiers are protected as placeholders
         
         // Bold + Italic (***text*** or ___text___)
         text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
@@ -405,6 +415,9 @@
         // Restore URL placeholders
         text = text.replace(/\x00URL(\d+)\x00/g, function(match, index) {
             return urlPlaceholders[parseInt(index, 10)];
+        });
+        text = text.replace(/\x00IDENTIFIER(\d+)\x00/g, function(match, index) {
+            return identifierPlaceholders[parseInt(index, 10)];
         });
         
         return text;

@@ -65,10 +65,18 @@ def test_frontend_provisions_cognito_auth() -> None:
     assert "enableDemoSession" not in auth
 
 
+def test_markdown_preserves_agentcore_tool_names() -> None:
+    markdown = pathlib.Path("app/site/utils/markdown.js").read_text(encoding="utf-8")
+    assert "identifierPlaceholders" in markdown
+    assert "___[a-zA-Z0-9_-]+" in markdown
+    assert "AgentCore tool names" in markdown
+
+
 if __name__ == "__main__":
     test_static_frontend_assets_exist()
     test_container_serves_public_runtime_config()
     test_frontend_stack_does_not_deploy_backend_resources()
     test_frontend_uses_backend_runtime_configuration()
     test_frontend_provisions_cognito_auth()
+    test_markdown_preserves_agentcore_tool_names()
     print("OK")
