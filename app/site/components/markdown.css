@@ -337,6 +337,14 @@
     background: var(--white, #fff);
 }
 
+.md-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem 0;
+    border-radius: 8px;
+}
+
 .md-table thead,
 .chat-msg-content thead {
     background: #f2f3f5;

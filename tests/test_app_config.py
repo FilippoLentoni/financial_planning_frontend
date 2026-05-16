@@ -70,6 +70,9 @@ def test_markdown_preserves_agentcore_tool_names() -> None:
     assert "identifierPlaceholders" in markdown
     assert "___[a-zA-Z0-9_-]+" in markdown
     assert "AgentCore tool names" in markdown
+    assert "normalizeMarkdown" in markdown
+    assert "md-table-wrapper" in markdown
+    assert "row boundary" in markdown
 
 
 def test_model_run_metadata_panel_is_wired() -> None:
