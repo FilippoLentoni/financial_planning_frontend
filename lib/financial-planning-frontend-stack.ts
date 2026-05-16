@@ -127,6 +127,8 @@ export class FinancialPlanningFrontendStack extends Stack {
         actions: ['execute-api:Invoke'],
         resources: [
           `arn:aws:execute-api:*:${this.account}:*/*/POST/runtime/invoke`,
+          `arn:aws:execute-api:*:${this.account}:*/*/GET/planning/runs`,
+          `arn:aws:execute-api:*:${this.account}:*/*/POST/planning/runs`,
           `arn:aws:execute-api:*:${this.account}:*/*/GET/gateways/iam`,
           `arn:aws:execute-api:*:${this.account}:*/*/POST/mcp/proxy`,
         ],

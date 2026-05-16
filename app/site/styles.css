@@ -1095,6 +1095,79 @@ p {
 }
 
 /* Chat Section */
+.model-run-panel {
+    flex-shrink: 0;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--gray-border);
+    background-color: var(--white);
+}
+
+.model-run-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.model-run-panel h2 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--squid-ink-dark);
+}
+
+.model-run-panel p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--gray-text);
+}
+
+.model-run-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.model-run-field {
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    background-color: var(--light-bg);
+}
+
+.model-run-field span {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--gray-text);
+}
+
+.model-run-field strong,
+.model-run-field code {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--squid-ink-dark);
+}
+
+.model-run-field code {
+    font-family: "SF Mono", "Monaco", "Consolas", monospace;
+}
+
+.model-run-empty {
+    color: var(--gray-text);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
 .chat-section {
     flex: 1;
     display: flex;

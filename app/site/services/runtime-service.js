@@ -287,6 +287,42 @@
             });
     };
 
+    /**
+     * Invoke an IAM-protected backend API route that shares the Runtime API base URL.
+     * Used for non-chat application metadata such as model-run summaries.
+     */
+    RuntimeService.prototype.invokeBackendApi = function(method, path, body) {
+        var self = this;
+        if (!this.restUrl) {
+            return Promise.reject(new Error('RuntimeService REST API base URL is not configured'));
+        }
+        var baseUrl = this.restUrl.replace(/\/runtime\/invoke$/, '');
+        var normalizedPath = path.charAt(0) === '/' ? path : '/' + path;
+        var url = baseUrl + normalizedPath;
+        var idToken = window.AuthService ? window.AuthService.getIdToken() : null;
+        if (!idToken) {
+            return Promise.reject(new Error('No ID token available'));
+        }
+        var bedrockService = window.BedrockService;
+        if (!bedrockService) {
+            return Promise.reject(new Error('BedrockService not available for SigV4 signing'));
+        }
+        var upperMethod = (method || 'GET').toUpperCase();
+        var bodyStr = body ? JSON.stringify(body) : '';
+        return bedrockService.getCredentials(idToken)
+            .then(function(credentials) {
+                return self._sigv4SignedFetch(upperMethod, url, bodyStr, credentials, null, 'execute-api');
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.text().then(function(text) {
+                        throw new Error('Backend API failed: ' + response.status + ' - ' + text);
+                    });
+                }
+                return response.json();
+            });
+    };
+
     // ================================================================
     // WebSocket Streaming — real-time token-by-token
     // ================================================================
@@ -781,12 +817,15 @@
                             fetchHeaders['X-Amz-Security-Token'] = credentials.sessionToken;
                         }
 
-                        return fetch(url, {
+                        var fetchOptions = {
                             method: method,
                             headers: fetchHeaders,
-                            body: bodyStr,
                             signal: signal
-                        });
+                        };
+                        if (method !== 'GET' && method !== 'HEAD') {
+                            fetchOptions.body = bodyStr;
+                        }
+                        return fetch(url, fetchOptions);
                     });
             });
         });
