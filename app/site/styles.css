@@ -1126,7 +1126,7 @@ p {
 
 .model-run-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 8px;
 }
 
@@ -1136,6 +1136,10 @@ p {
     border: 1px solid var(--gray-border);
     border-radius: 8px;
     background-color: var(--light-bg);
+}
+
+.model-run-field-wide {
+    grid-column: span 2;
 }
 
 .model-run-field span {
@@ -1160,6 +1164,41 @@ p {
 
 .model-run-field code {
     font-family: "SF Mono", "Monaco", "Consolas", monospace;
+    user-select: text;
+}
+
+.model-run-id-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.model-run-id-row code {
+    flex: 1;
+}
+
+.model-run-copy-btn {
+    flex-shrink: 0;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    background-color: var(--white);
+    color: var(--squid-ink-dark);
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    padding: 6px 8px;
+}
+
+.model-run-copy-btn:hover,
+.model-run-copy-btn.copied {
+    background-color: var(--selected-bg);
+}
+
+@media (max-width: 720px) {
+    .model-run-field-wide {
+        grid-column: span 1;
+    }
 }
 
 .model-run-empty {

@@ -467,6 +467,52 @@
         });
     }
 
+    function copyTextToClipboard(value, button) {
+        if (!value || value === 'n/a') return;
+        var done = function() {
+            if (!button) return;
+            var previous = button.textContent;
+            button.textContent = 'Copied';
+            button.classList.add('copied');
+            setTimeout(function() {
+                button.textContent = previous;
+                button.classList.remove('copied');
+            }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(value).then(done).catch(function() {
+                console.warn('[App] Clipboard API failed');
+            });
+        } else {
+            var textArea = document.createElement('textarea');
+            textArea.value = value;
+            textArea.setAttribute('readonly', 'readonly');
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                done();
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+    }
+
+    function renderCopyableId(label, value) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        var safeValue = value || 'n/a';
+        return '\
+            <div class="model-run-field model-run-field-wide">\
+                <span>' + escapeHtml(label) + '</span>\
+                <div class="model-run-id-row">\
+                    <code title="' + escapeHtml(safeValue) + '">' + escapeHtml(safeValue) + '</code>\
+                    <button class="model-run-copy-btn" type="button" data-copy-value="' + escapeHtml(safeValue) + '" title="Copy ' + escapeHtml(label) + '">Copy</button>\
+                </div>\
+            </div>';
+    }
+
     function renderModelRunMetadata(run) {
         if (!elements.modelRunMetadata || !elements.modelRunSubtitle) return;
         var escapeHtml = window.SecurityUtils.escapeHtml;
@@ -483,8 +529,8 @@
             (run.description || 'Portfolio planning run') + ' • ' + created
         );
         elements.modelRunMetadata.innerHTML = '\
-            <div class="model-run-field"><span>Input ID</span><code>' + escapeHtml(run.input_id || 'n/a') + '</code></div>\
-            <div class="model-run-field"><span>Run ID</span><code>' + escapeHtml(run.run_id || 'n/a') + '</code></div>\
+            ' + renderCopyableId('Input ID', run.input_id) + '\
+            ' + renderCopyableId('Run ID', run.run_id) + '\
             <div class="model-run-field"><span>As of</span><strong>' + escapeHtml(run.asOfDate || 'n/a') + '</strong></div>\
             <div class="model-run-field"><span>Portfolio</span><strong>' + escapeHtml(run.portfolioId || 'n/a') + '</strong></div>\
             <div class="model-run-field"><span>Risk</span><strong>' + escapeHtml(run.riskTarget || 'n/a') + '</strong></div>\
@@ -1397,6 +1443,14 @@
         }
         if (elements.refreshModelRunsBtn) {
             elements.refreshModelRunsBtn.addEventListener('click', loadModelRuns);
+        }
+        if (elements.modelRunMetadata) {
+            elements.modelRunMetadata.addEventListener('click', function(event) {
+                var target = event.target;
+                if (target && target.classList && target.classList.contains('model-run-copy-btn')) {
+                    copyTextToClipboard(target.getAttribute('data-copy-value'), target);
+                }
+            });
         }
         if (elements.newChatBtn) {
             elements.newChatBtn.addEventListener('click', handleNewChat);
