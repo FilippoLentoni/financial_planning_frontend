@@ -79,9 +79,12 @@ def test_model_run_metadata_panel_is_wired() -> None:
     stack = pathlib.Path("lib/financial-planning-frontend-stack.ts").read_text(encoding="utf-8")
     assert "modelRunPanel" in app
     assert "loadModelRuns" in app
+    assert "copyTextToClipboard" in app
+    assert "data-copy-value" in app
     assert "/planning/runs" in app
     assert "invokeBackendApi" in runtime
     assert "model-run-panel" in styles
+    assert "model-run-copy-btn" in styles
     assert "GET/planning/runs" in stack
 
 
