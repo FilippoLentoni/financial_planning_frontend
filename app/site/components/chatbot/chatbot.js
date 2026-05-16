@@ -101,31 +101,6 @@
             <div class="chatbot-container">\
                 <div class="chatbot-header">\
                     <h3>Financial Planning Chat</h3>\
-                    <div class="chatbot-controls">\
-                        <div class="orchestrator-toggle" id="orchestrator-toggle" title="Enable multi-agent orchestration mode">\
-                            <span class="orchestrator-toggle-label">🎭 Orchestrator</span>\
-                            <div class="orchestrator-toggle-switch" id="orchestrator-switch"></div>\
-                            <span class="orchestrator-toggle-count" id="orchestrator-count"></span>\
-                        </div>\
-                        <button class="btn-icon" id="chatbot-tools-btn" title="View MCP Tools">🔧 Tools</button>\
-                        <button class="btn-icon" id="chatbot-servers-btn" title="MCP Servers">🌐 Servers</button>\
-                        <button class="btn-icon" id="chatbot-trace-btn" title="Token Usage Trace">📊 Trace</button>\
-                        <button class="btn-icon" id="chatbot-clear-btn" title="Clear Conversation">🗑️</button>\
-                    </div>\
-                </div>\
-                <!-- Orchestrator Status Bar -->\
-                <div class="orchestrator-status-bar" id="orchestrator-status-bar">\
-                    <div class="orchestrator-status-info">\
-                        <div class="orchestrator-status-badge">\
-                            <span class="icon">🎭</span>\
-                            <span>Orchestrator Mode</span>\
-                        </div>\
-                        <div class="orchestrator-workers-list" id="orchestrator-workers-list"></div>\
-                        <button class="orchestrator-settings-btn" id="orchestrator-settings-btn" title="Configure Worker Agents">\
-                            <span>⚙️</span>\
-                            <span>Settings</span>\
-                        </button>\
-                    </div>\
                 </div>\
                 <div class="chatbot-status" id="chatbot-status">\
                     <span class="status-indicator" id="status-indicator"></span>\
@@ -137,21 +112,6 @@
                         <p>Create 16-week synthetic portfolio plans, analyze liquidity risk, and prepare weekly review reports.</p>\
                         <p>Start with: create a moderate 16-week plan for my demo portfolio.</p>\
                     </div>\
-                </div>\
-                <div class="chatbot-token-usage" id="chatbot-token-usage">\
-                    <span class="token-usage-label">📊 Token Usage:</span>\
-                    <span class="token-usage-item">\
-                        <span class="token-label">Input:</span>\
-                        <span class="token-value" id="token-input">0</span>\
-                    </span>\
-                    <span class="token-usage-item">\
-                        <span class="token-label">Output:</span>\
-                        <span class="token-value" id="token-output">0</span>\
-                    </span>\
-                    <span class="token-usage-item token-total">\
-                        <span class="token-label">Total:</span>\
-                        <span class="token-value" id="token-total">0</span>\
-                    </span>\
                 </div>\
                 <div class="chatbot-input-area">\
                     <form class="chatbot-input-form" id="chatbot-form">\
@@ -488,25 +448,31 @@
             self.handleStop();
         });
         
-        // Clear button
-        this.elements.clearBtn.addEventListener('click', function() {
-            self.clearConversation();
-        });
+        // Optional header controls are hidden in this application shell.
+        if (this.elements.clearBtn) {
+            this.elements.clearBtn.addEventListener('click', function() {
+                self.clearConversation();
+            });
+        }
         
-        // Tools panel
-        this.elements.toolsBtn.addEventListener('click', function() {
-            self.panelsManager.showToolsPanel();
-        });
+        if (this.elements.toolsBtn) {
+            this.elements.toolsBtn.addEventListener('click', function() {
+                self.panelsManager.showToolsPanel();
+            });
+        }
         
-        // Servers panel
-        this.elements.serversBtn.addEventListener('click', function() {
-            self.panelsManager.showServersPanel();
-        });
+        if (this.elements.serversBtn) {
+            this.elements.serversBtn.addEventListener('click', function() {
+                self.panelsManager.showServersPanel();
+            });
+        }
         
-        // Trace panel
-        document.getElementById('chatbot-trace-btn').addEventListener('click', function() {
-            self.tokenAuditPanel.show();
-        });
+        var traceBtn = document.getElementById('chatbot-trace-btn');
+        if (traceBtn) {
+            traceBtn.addEventListener('click', function() {
+                self.tokenAuditPanel.show();
+            });
+        }
         
         // Worker settings button
         var settingsBtn = document.getElementById('orchestrator-settings-btn');
