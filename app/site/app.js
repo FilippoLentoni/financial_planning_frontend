@@ -31,6 +31,7 @@
     var state = {
         appInjected: false,
         sidebarOpen: true,
+        isDarkMode: true,
         skeletonIds: {},
         loadStartTime: Date.now(),
         minLoadingTime: 0, // No artificial loading delay
@@ -52,15 +53,6 @@
         <div class="sidebar-header">\
             <h1 class="logo"><span class="logo-img"><img src="assets/agentic-logo.svg" alt="Logo" /></span> <span class="logo-text-label">Portfolio Planner</span></h1>\
             <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">☰</button>\
-        </div>\
-        <div class="sidebar-section gateway-section" id="gatewaySection">\
-            <div class="section-header">\
-                <h3>Gateways</h3>\
-                <button class="btn-icon btn-sm" id="refreshGatewaysBtn" title="Refresh Gateways">↻</button>\
-            </div>\
-            <div id="gatewayList" class="gateway-list">\
-                <p class="gateway-placeholder">Loading gateways...</p>\
-            </div>\
         </div>\
         <div class="sidebar-section conversations-section" id="conversationsSection">\
             <div class="section-header">\
@@ -104,8 +96,8 @@
             <section class="model-run-panel" id="modelRunPanel" aria-live="polite">\
                 <div class="model-run-panel-header">\
                     <div>\
-                        <h2>Latest Model Run</h2>\
-                        <p id="modelRunSubtitle">Loading model run metadata...</p>\
+                        <h2>Input / Run History</h2>\
+                        <p id="modelRunSubtitle">Loading planning lineage...</p>\
                     </div>\
                     <button class="btn-icon btn-sm" id="refreshModelRunsBtn" title="Refresh model run metadata">↻</button>\
                 </div>\
@@ -145,6 +137,8 @@
             
             hideUnauthorizedScreen();
             document.title = 'Financial Planning Assistant';
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.setAttribute('data-theme', 'dark');
             
             cacheElements();
             setupEventListeners();
@@ -467,9 +461,130 @@
         });
     }
 
-    function renderModelRunMetadata(run) {
+    function copyTextToClipboard(value, button) {
+        if (!value || value === 'n/a') return;
+        var done = function() {
+            if (!button) return;
+            var previous = button.textContent;
+            button.textContent = 'Copied';
+            button.classList.add('copied');
+            setTimeout(function() {
+                button.textContent = previous;
+                button.classList.remove('copied');
+            }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(value).then(done).catch(function() {
+                console.warn('[App] Clipboard API failed');
+            });
+        } else {
+            var textArea = document.createElement('textarea');
+            textArea.value = value;
+            textArea.setAttribute('readonly', 'readonly');
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                done();
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+    }
+
+    function renderCopyableId(label, value) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        var safeValue = value || 'n/a';
+        return '\
+            <div class="model-run-field model-run-field-wide">\
+                <span>' + escapeHtml(label) + '</span>\
+                <div class="model-run-id-row">\
+                    <code title="' + escapeHtml(safeValue) + '">' + escapeHtml(safeValue) + '</code>\
+                    <button class="model-run-copy-btn" type="button" data-copy-value="' + escapeHtml(safeValue) + '" title="Copy ' + escapeHtml(label) + '">Copy</button>\
+                </div>\
+            </div>';
+    }
+
+    function renderLineageValue(label, value) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        var safeValue = value || 'n/a';
+        return '\
+            <span class="lineage-value">\
+                <span class="lineage-label">' + escapeHtml(label) + '</span>\
+                <code title="' + escapeHtml(safeValue) + '">' + escapeHtml(safeValue) + '</code>\
+                <button class="model-run-copy-btn compact" type="button" data-copy-value="' + escapeHtml(safeValue) + '" title="Copy ' + escapeHtml(label) + '">Copy</button>\
+            </span>';
+    }
+
+    function renderStatusBadge(status, outputReady) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        var normalized = String(status || 'UNKNOWN').toUpperCase();
+        var className = 'status-badge status-' + normalized.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        var label = normalized === 'COMPLETED' && outputReady ? 'COMPLETED · OUTPUT READY' : normalized;
+        return '<span class="' + escapeHtml(className) + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function hasActiveModelRun(data) {
+        var runs = data && data.items ? data.items : [];
+        return runs.some(function(run) {
+            var status = String(run.status || '').toUpperCase();
+            return status === 'PENDING' || status === 'RUNNING' || status === 'STARTED';
+        });
+    }
+
+    function renderInputLineageRow(input) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        var runIds = input.run_ids && input.run_ids.length ? input.run_ids : [];
+        var runHtml = runIds.length
+            ? runIds.map(function(runId) { return renderLineageValue('Run', runId); }).join('')
+            : '<span class="lineage-missing">No run yet</span>';
+        var statusHtml = input.latest_run_status
+            ? renderStatusBadge(input.latest_run_status, input.latest_run_output_ready)
+            : '<span class="status-badge status-waiting">WAITING FOR RUN</span>';
+        return '\
+            <div class="lineage-row">\
+                <div class="lineage-main">\
+                    ' + renderLineageValue('Input', input.input_id) + '\
+                    <span class="lineage-meta">' + escapeHtml(input.createdAtIso || 'unknown time') + '</span>\
+                </div>\
+                <div class="lineage-run-map">' + runHtml + '</div>\
+                <div class="lineage-tags">\
+                    ' + statusHtml + '\
+                    <span>' + escapeHtml(input.source || 'unknown source') + '</span>\
+                    <span>' + escapeHtml(input.riskTarget || 'risk n/a') + '</span>\
+                    <span>' + escapeHtml(input.asOfDate || 'as-of n/a') + '</span>\
+                    <span>' + escapeHtml(formatCurrency(input.totalValue)) + '</span>\
+                </div>\
+            </div>';
+    }
+
+    function renderRunSummaryRow(run) {
+        var escapeHtml = window.SecurityUtils.escapeHtml;
+        return '\
+            <div class="run-summary-row">\
+                <div class="run-summary-map">\
+                    ' + renderLineageValue('Input', run.input_id) + '\
+                    <span class="lineage-arrow">→</span>\
+                    ' + renderLineageValue('Run', run.run_id) + '\
+                </div>\
+                <div class="lineage-tags">\
+                    ' + renderStatusBadge(run.status, run.outputReady) + '\
+                    <span>' + escapeHtml(run.createdAtIso || 'unknown time') + '</span>\
+                    <span>' + escapeHtml(run.source || 'unknown source') + '</span>\
+                    <span>W16 ' + escapeHtml(formatCurrency(run.expectedValueAtWeek16)) + '</span>\
+                    <span>' + escapeHtml((run.expectedReturnPct16w || 0) + '% return') + '</span>\
+                </div>\
+            </div>';
+    }
+
+    function renderModelRunMetadata(data) {
         if (!elements.modelRunMetadata || !elements.modelRunSubtitle) return;
         var escapeHtml = window.SecurityUtils.escapeHtml;
+        var run = data && data.latest ? data.latest : null;
+        var inputs = data && data.inputs ? data.inputs : [];
+        var runs = data && data.items ? data.items : [];
         if (!run) {
             window.SecurityUtils.setTextContent(elements.modelRunSubtitle, 'No model run available yet.');
             elements.modelRunMetadata.innerHTML = '<div class="model-run-empty">No input/run pair has been created.</div>';
@@ -480,25 +595,43 @@
         var modelId = run.modelUsed && run.modelUsed.modelId ? run.modelUsed.modelId : 'backend default';
         window.SecurityUtils.setTextContent(
             elements.modelRunSubtitle,
-            (run.description || 'Portfolio planning run') + ' • ' + created
+            (inputs.length || 0) + ' inputs • ' + (runs.length || 0) + ' runs • latest ' + created
         );
         elements.modelRunMetadata.innerHTML = '\
-            <div class="model-run-field"><span>Input ID</span><code>' + escapeHtml(run.input_id || 'n/a') + '</code></div>\
-            <div class="model-run-field"><span>Run ID</span><code>' + escapeHtml(run.run_id || 'n/a') + '</code></div>\
-            <div class="model-run-field"><span>As of</span><strong>' + escapeHtml(run.asOfDate || 'n/a') + '</strong></div>\
-            <div class="model-run-field"><span>Portfolio</span><strong>' + escapeHtml(run.portfolioId || 'n/a') + '</strong></div>\
-            <div class="model-run-field"><span>Risk</span><strong>' + escapeHtml(run.riskTarget || 'n/a') + '</strong></div>\
-            <div class="model-run-field"><span>Expected W16</span><strong>' + escapeHtml(formatCurrency(run.expectedValueAtWeek16)) + '</strong></div>\
-            <div class="model-run-field"><span>Return</span><strong>' + escapeHtml((run.expectedReturnPct16w || 0) + '%') + '</strong></div>\
-            <div class="model-run-field"><span>Model</span><code>' + escapeHtml(modelId) + '</code></div>';
+            <div class="model-run-latest">\
+                <div class="model-run-latest-title">Latest mapped pair</div>\
+                <div class="model-run-grid">\
+                    ' + renderCopyableId('Input ID', run.input_id) + '\
+                    ' + renderCopyableId('Run ID', run.run_id) + '\
+                    <div class="model-run-field"><span>Status</span>' + renderStatusBadge(run.status, run.outputReady) + '</div>\
+                    <div class="model-run-field"><span>As of</span><strong>' + escapeHtml(run.asOfDate || 'n/a') + '</strong></div>\
+                    <div class="model-run-field"><span>Portfolio</span><strong>' + escapeHtml(run.portfolioId || 'n/a') + '</strong></div>\
+                    <div class="model-run-field"><span>Risk</span><strong>' + escapeHtml(run.riskTarget || 'n/a') + '</strong></div>\
+                    <div class="model-run-field"><span>Expected W16</span><strong>' + escapeHtml(formatCurrency(run.expectedValueAtWeek16)) + '</strong></div>\
+                    <div class="model-run-field"><span>Return</span><strong>' + escapeHtml((run.expectedReturnPct16w || 0) + '%') + '</strong></div>\
+                    <div class="model-run-field"><span>Model</span><code>' + escapeHtml(modelId) + '</code></div>\
+                </div>\
+            </div>\
+            <div class="model-lineage-section">\
+                <div class="model-lineage-header">Input history and run mapping</div>\
+                <div class="model-lineage-list">' + (inputs.length ? inputs.map(renderInputLineageRow).join('') : '<div class="model-run-empty">No input history available.</div>') + '</div>\
+            </div>\
+            <div class="model-lineage-section model-lineage-section-compact">\
+                <div class="model-lineage-header">Run history</div>\
+                <div class="model-lineage-list">' + (runs.length ? runs.map(renderRunSummaryRow).join('') : '<div class="model-run-empty">No run history available.</div>') + '</div>\
+            </div>';
     }
 
     function loadModelRuns() {
         if (!elements.modelRunMetadata || !window.RuntimeService || !window.RuntimeService.invokeBackendApi) return;
         if (elements.refreshModelRunsBtn) elements.refreshModelRunsBtn.disabled = true;
-        window.RuntimeService.invokeBackendApi('GET', '/planning/runs')
+        window.RuntimeService.invokeBackendApi('GET', '/planning/runs?limit=50&inputLimit=50')
             .then(function(data) {
-                renderModelRunMetadata(data.latest);
+                renderModelRunMetadata(data);
+                if (hasActiveModelRun(data)) {
+                    window.clearTimeout(loadModelRuns.refreshTimer);
+                    loadModelRuns.refreshTimer = window.setTimeout(loadModelRuns, 5000);
+                }
             })
             .catch(function(error) {
                 console.error('[App] Failed to load model run metadata:', error);
@@ -1158,6 +1291,7 @@
             var item = document.createElement('div');
             item.className = 'conversation-item' + (isActive ? ' active' : '');
             item.setAttribute('data-conversation-id', conv.conversationId);
+            item.setAttribute('title', 'Open this conversation');
             
             item.innerHTML = '\
                 <span class="conversation-item-icon">💬</span>\
@@ -1166,6 +1300,7 @@
                     <div class="conversation-item-meta">\
                         <span class="conversation-item-time">' + escapeHtml(window.ConversationService.formatRelativeTime(conv.updatedAt)) + '</span>\
                         <span class="conversation-item-count">' + (conv.messageCount || 0) + ' msgs</span>\
+                        <span class="conversation-item-resume">' + (isActive ? 'Active' : 'Resume') + '</span>\
                     </div>\
                 </div>\
                 <button class="conversation-item-delete" title="Delete conversation">&times;</button>';
@@ -1397,6 +1532,14 @@
         }
         if (elements.refreshModelRunsBtn) {
             elements.refreshModelRunsBtn.addEventListener('click', loadModelRuns);
+        }
+        if (elements.modelRunMetadata) {
+            elements.modelRunMetadata.addEventListener('click', function(event) {
+                var target = event.target;
+                if (target && target.classList && target.classList.contains('model-run-copy-btn')) {
+                    copyTextToClipboard(target.getAttribute('data-copy-value'), target);
+                }
+            });
         }
         if (elements.newChatBtn) {
             elements.newChatBtn.addEventListener('click', handleNewChat);
