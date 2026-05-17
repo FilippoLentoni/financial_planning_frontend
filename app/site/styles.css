@@ -1101,8 +1101,11 @@ p {
     padding: 14px 18px;
     border-bottom: 1px solid var(--gray-border);
     background-color: var(--white);
-    max-height: 42vh;
-    overflow-y: auto;
+    height: var(--model-run-panel-height, 280px);
+    min-height: 120px;
+    max-height: 72vh;
+    overflow: auto;
+    resize: vertical;
 }
 
 .model-run-panel-header {
@@ -1111,6 +1114,31 @@ p {
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 12px;
+}
+
+.model-run-panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.model-run-panel.collapsed {
+    height: 58px;
+    min-height: 58px;
+    overflow: hidden;
+    resize: none;
+}
+
+.model-run-panel.collapsed .model-run-grid,
+.model-run-panel.collapsed .model-run-latest,
+.model-run-panel.collapsed .model-lineage-section,
+.model-run-panel.collapsed #modelRunMetadata {
+    display: none;
+}
+
+.model-run-panel.collapsed .model-run-panel-header {
+    margin-bottom: 0;
 }
 
 .model-run-panel h2 {
