@@ -51,7 +51,7 @@
 <div id="app" class="app-layout">\
     <aside class="sidebar" id="sidebar">\
         <div class="sidebar-header">\
-            <h1 class="logo"><span class="logo-img"><img src="assets/agentic-logo.svg" alt="Logo" /></span> <span class="logo-text-label">Portfolio Planner</span></h1>\
+            <h1 class="logo"><span class="logo-img"><img src="assets/agentic-logo.svg" alt="Logo" /></span> <span class="logo-text-label">Financial Planning</span></h1>\
             <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar">☰</button>\
         </div>\
         <div class="sidebar-section conversations-section" id="conversationsSection">\
