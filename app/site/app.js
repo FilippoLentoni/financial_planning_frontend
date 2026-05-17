@@ -99,7 +99,12 @@
                         <h2>Input / Run History</h2>\
                         <p id="modelRunSubtitle">Loading planning lineage...</p>\
                     </div>\
-                    <button class="btn-icon btn-sm" id="refreshModelRunsBtn" title="Refresh model run metadata">↻</button>\
+                    <div class="model-run-panel-actions">\
+                        <button class="btn-icon btn-sm" id="shrinkModelRunPanelBtn" title="Shrink input/run history">-</button>\
+                        <button class="btn-icon btn-sm" id="expandModelRunPanelBtn" title="Expand input/run history">+</button>\
+                        <button class="btn-icon btn-sm" id="toggleModelRunPanelBtn" title="Collapse input/run history">▴</button>\
+                        <button class="btn-icon btn-sm" id="refreshModelRunsBtn" title="Refresh model run metadata">↻</button>\
+                    </div>\
                 </div>\
                 <div class="model-run-grid" id="modelRunMetadata">\
                     <div class="model-run-empty">Waiting for the latest input and run.</div>\
@@ -276,6 +281,9 @@
         elements.modelRunSubtitle = document.getElementById('modelRunSubtitle');
         elements.modelRunMetadata = document.getElementById('modelRunMetadata');
         elements.refreshModelRunsBtn = document.getElementById('refreshModelRunsBtn');
+        elements.shrinkModelRunPanelBtn = document.getElementById('shrinkModelRunPanelBtn');
+        elements.expandModelRunPanelBtn = document.getElementById('expandModelRunPanelBtn');
+        elements.toggleModelRunPanelBtn = document.getElementById('toggleModelRunPanelBtn');
     }
 
     // ============================================================
@@ -302,6 +310,65 @@
             var icon = elements.darkModeToggle.querySelector('.nav-action-icon');
             if (icon) {
                 icon.textContent = state.isDarkMode ? '☀️' : '🌙';
+            }
+        }
+    }
+
+    function setModelRunPanelHeight(height) {
+        if (!elements.modelRunPanel) return;
+        var clamped = Math.max(120, Math.min(720, height));
+        elements.modelRunPanel.style.setProperty('--model-run-panel-height', clamped + 'px');
+        elements.modelRunPanel.classList.remove('collapsed');
+        if (elements.toggleModelRunPanelBtn) {
+            elements.toggleModelRunPanelBtn.textContent = '▴';
+            elements.toggleModelRunPanelBtn.title = 'Collapse input/run history';
+        }
+        try {
+            localStorage.setItem('financial_planning_model_run_panel_height', String(clamped));
+            localStorage.setItem('financial_planning_model_run_panel_collapsed', 'false');
+        } catch (error) {
+            console.debug('[App] Could not persist model run panel size:', error);
+        }
+    }
+
+    function resizeModelRunPanel(delta) {
+        if (!elements.modelRunPanel) return;
+        var current = elements.modelRunPanel.getBoundingClientRect().height || 260;
+        setModelRunPanelHeight(current + delta);
+    }
+
+    function toggleModelRunPanel() {
+        if (!elements.modelRunPanel) return;
+        var isCollapsed = elements.modelRunPanel.classList.toggle('collapsed');
+        if (elements.toggleModelRunPanelBtn) {
+            elements.toggleModelRunPanelBtn.textContent = isCollapsed ? '▾' : '▴';
+            elements.toggleModelRunPanelBtn.title = isCollapsed ? 'Expand input/run history' : 'Collapse input/run history';
+        }
+        try {
+            localStorage.setItem('financial_planning_model_run_panel_collapsed', String(isCollapsed));
+        } catch (error) {
+            console.debug('[App] Could not persist model run panel collapsed state:', error);
+        }
+    }
+
+    function initModelRunPanelSize() {
+        if (!elements.modelRunPanel) return;
+        var storedHeight = null;
+        var collapsed = false;
+        try {
+            storedHeight = parseInt(localStorage.getItem('financial_planning_model_run_panel_height') || '', 10);
+            collapsed = localStorage.getItem('financial_planning_model_run_panel_collapsed') === 'true';
+        } catch (error) {
+            console.debug('[App] Could not read model run panel size:', error);
+        }
+        if (storedHeight && !Number.isNaN(storedHeight)) {
+            elements.modelRunPanel.style.setProperty('--model-run-panel-height', storedHeight + 'px');
+        }
+        if (collapsed) {
+            elements.modelRunPanel.classList.add('collapsed');
+            if (elements.toggleModelRunPanelBtn) {
+                elements.toggleModelRunPanelBtn.textContent = '▾';
+                elements.toggleModelRunPanelBtn.title = 'Expand input/run history';
             }
         }
     }
@@ -1268,7 +1335,7 @@
             .catch(function(error) {
                 console.error('[App] Failed to load conversations:', error);
                 if (elements.conversationList) {
-                    elements.conversationList.innerHTML = '<p class="conversation-error">Failed to load</p>';
+                    elements.conversationList.innerHTML = '<p class="conversation-empty">No conversations yet</p>';
                 }
             });
     }
@@ -1533,6 +1600,16 @@
         if (elements.refreshModelRunsBtn) {
             elements.refreshModelRunsBtn.addEventListener('click', loadModelRuns);
         }
+        if (elements.shrinkModelRunPanelBtn) {
+            elements.shrinkModelRunPanelBtn.addEventListener('click', function() { resizeModelRunPanel(-120); });
+        }
+        if (elements.expandModelRunPanelBtn) {
+            elements.expandModelRunPanelBtn.addEventListener('click', function() { resizeModelRunPanel(120); });
+        }
+        if (elements.toggleModelRunPanelBtn) {
+            elements.toggleModelRunPanelBtn.addEventListener('click', toggleModelRunPanel);
+        }
+        initModelRunPanelSize();
         if (elements.modelRunMetadata) {
             elements.modelRunMetadata.addEventListener('click', function(event) {
                 var target = event.target;

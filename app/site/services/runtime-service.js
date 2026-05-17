@@ -761,6 +761,22 @@
         var urlObj = new URL(url);
         var host = urlObj.host;
         var path = urlObj.pathname;
+        var encodeRfc3986 = function(value) {
+            return encodeURIComponent(value).replace(/[!'()*]/g, function(char) {
+                return '%' + char.charCodeAt(0).toString(16).toUpperCase();
+            });
+        };
+        var queryParts = [];
+        urlObj.searchParams.forEach(function(value, key) {
+            queryParts.push([encodeRfc3986(key), encodeRfc3986(value)]);
+        });
+        queryParts.sort(function(a, b) {
+            if (a[0] === b[0]) return a[1] < b[1] ? -1 : (a[1] > b[1] ? 1 : 0);
+            return a[0] < b[0] ? -1 : 1;
+        });
+        var canonicalQueryString = queryParts.map(function(part) {
+            return part[0] + '=' + part[1];
+        }).join('&');
         var service = signingService || 'execute-api';
         var region = this.region || bedrockService.region || 'us-east-1';
         if (service === 'execute-api') {
@@ -790,7 +806,7 @@
         var signedHeaders = sortedKeys.join(';');
 
         return bedrockService.sha256(bodyStr).then(function(payloadHash) {
-            var canonicalRequest = [method, path, '', canonicalHeaders, signedHeaders, payloadHash].join('\n');
+            var canonicalRequest = [method, path, canonicalQueryString, canonicalHeaders, signedHeaders, payloadHash].join('\n');
 
             return bedrockService.sha256(canonicalRequest).then(function(canonicalRequestHash) {
                 var credentialScope = dateStamp + '/' + region + '/' + service + '/aws4_request';

@@ -14,6 +14,7 @@
         this.saveInProgress = false;
         this.saveQueue = null; // Queued save while one is in progress
         this.listeners = []; // onChange listeners
+        this.remoteAvailable = true;
     }
 
     // ============================================================
@@ -211,7 +212,12 @@
             .then(function(response) {
                 if (!response.ok) {
                     return response.text().then(function(text) {
-                        throw new Error('Conversations API error ' + response.status + ': ' + text);
+                        var error = new Error('Conversations API error ' + response.status + ': ' + text);
+                        if (response.status === 403 || response.status === 404) {
+                            self.remoteAvailable = false;
+                            error.conversationApiUnavailable = true;
+                        }
+                        throw error;
                     });
                 }
                 return response.json();
@@ -228,8 +234,17 @@
      * @returns {Promise<Object>} - { conversations: [...], nextToken?: string }
      */
     ConversationService.prototype.listConversations = function(limit) {
+        if (!this.remoteAvailable) {
+            return Promise.resolve({ conversations: [] });
+        }
         var queryString = 'limit=' + (limit || 50);
-        return this._apiRequest('GET', '/conversations', queryString, null);
+        return this._apiRequest('GET', '/conversations', queryString, null)
+            .catch(function(error) {
+                if (error && error.conversationApiUnavailable) {
+                    return { conversations: [] };
+                }
+                throw error;
+            });
     };
 
     /**
@@ -248,6 +263,13 @@
      */
     ConversationService.prototype.saveConversation = function(data) {
         var self = this;
+        if (!this.remoteAvailable) {
+            return Promise.resolve({
+                conversationId: this.currentConversationId,
+                messageCount: data && data.messages ? data.messages.length : 0,
+                isNew: false
+            });
+        }
         return this._apiRequest('POST', '/conversations', '', data)
             .then(function(result) {
                 // Update current conversation ID if this was a new conversation

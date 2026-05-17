@@ -76,6 +76,8 @@
     function parseMarkdown(rawText) {
         if (!rawText) return '';
         
+        rawText = normalizeMarkdown(rawText);
+
         // CRITICAL: Escape ALL HTML first to prevent XSS
         var text = escapeHtml(rawText);
         
@@ -192,7 +194,7 @@
             // Table detection (pipes at start and end, or separator line)
             if (trimmedLine.indexOf('|') !== -1) {
                 var isTableSeparator = /^\|?[\s-:|]+\|?$/.test(trimmedLine);
-                if (isTableSeparator || inTable || /^\|.*\|$/.test(trimmedLine)) {
+                if (isTableSeparator || inTable || /^\|.*\|/.test(trimmedLine)) {
                     if (!inTable) {
                         closeOpenBlocks();
                         inTable = true;
@@ -431,7 +433,7 @@
     function renderTable(rows) {
         if (rows.length === 0) return '';
         
-        var html = '<table class="md-table"><thead><tr>';
+        var html = '<div class="md-table-wrapper"><table class="md-table"><thead><tr>';
         
         // Parse header row
         var headerCells = parseTableRow(rows[0]);
@@ -454,8 +456,41 @@
             html += '</tbody>';
         }
         
-        html += '</table>';
+        html += '</table></div>';
         return html;
+    }
+
+    /**
+     * Repair common LLM formatting glitches before secure escaping.
+     * Models sometimes stream compact markdown where headings, lists, and tables
+     * are adjacent without newlines. This keeps the chat readable without trusting
+     * any raw HTML from the model.
+     */
+    function normalizeMarkdown(rawText) {
+        var text = String(rawText || '').replace(/\r\n/g, '\n');
+
+        // Table rows can arrive as "... | value || NEXT | value". Treat double
+        // pipes surrounded by optional spaces as a row boundary.
+        text = text.replace(/\s+\|\|\s+/g, '\n| ');
+
+        // Ensure headings start on their own line.
+        text = text.replace(/([^\n])(\s*#{1,6}\s+)/g, function(_match, before, heading) {
+            return before + '\n\n' + heading.trimStart();
+        });
+
+        // Split compact heading/list and heading/table forms:
+        // "### Summary- Item" -> "### Summary\n- Item"
+        // "### Holdings| Symbol |" -> "### Holdings\n| Symbol |"
+        // "### Flags1. Item" -> "### Flags\n1. Item"
+        text = text.replace(/^(#{1,6}\s+[^-\n|0-9]{3,80})-\s+/gm, '$1\n- ');
+        text = text.replace(/^(#{1,6}\s+[^|\n]{3,80})\|/gm, '$1\n|');
+        text = text.replace(/^(#{1,6}\s+[^0-9\n|]{3,80})(\d+\.)/gm, '$1\n$2');
+        text = text.replace(/(\S)-\s+([A-Z][A-Za-z ]{2,40}:)/g, '$1\n- $2');
+
+        // Split sentences that accidentally run into a new bolded section.
+        text = text.replace(/([.!?])(\s*)(\*\*[A-Z][^*]{2,80}\*\*)/g, '$1\n\n$3');
+
+        return text;
     }
 
     /**
@@ -509,6 +544,7 @@
         parse: parseMarkdown,
         renderToElement: renderToElement,
         createElement: createMarkdownElement,
+        normalize: normalizeMarkdown,
         escapeHtml: escapeHtml,
         isValidUrl: isValidUrl
     };
